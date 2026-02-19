@@ -2,6 +2,7 @@ import React from 'react';
 import './LoginPage.css';
 import google from '../../assets/google.svg';
 import github from '../../assets/github.svg';
+import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
 
@@ -30,7 +31,7 @@ const LoginPage = () => {
 
                 <section className='sign-up-redirect'>
                     <p>Don't have an account?</p>
-                    <a href="/sign-up">Sign Up</a>
+                    <Link to="/sign-up">Sign Up</Link>
                 </section>
             </form>
 

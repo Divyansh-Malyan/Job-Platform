@@ -1,0 +1,128 @@
+body {
+    font-family: "Outfit", sans-serif;
+}
+
+.signup-page {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.left-side-form {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 200px;
+    background: white;
+}
+
+.left-side-form h2 {
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.left-side-form input {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+}
+
+.forget-pass {
+    text-align: right;
+    font-size: 11px;
+    margin-top: 10px;
+}
+
+.submit-button {
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    background-color: #0062ff;
+    color: white;
+    cursor: pointer;
+}
+
+.social-login-buttons {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    align-items: center;
+
+}
+.social-login-buttons button {
+    padding: 8px 52px 8px 52px;
+    border-radius: 8px;
+    border: solid 1px #ccc;
+    background-color: white;
+    font-weight: 700;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 11px;
+}
+
+.social-login-buttons img{
+    width: 18px;
+    height: 18px;
+}
+
+.sign-up-redirect{
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    font-size: 12px;
+    align-items: center;
+}
+
+.sign-up-redirect a{
+    color: #0062FF;
+    font-weight: 600;
+}
+.sign-up-redirect p{
+    color: #969AB8;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    color: #999;
+    font-size: 14px;
+}
+
+.divider hr {
+    flex: 1;
+    border: none;
+    height: 1px;
+    background-color: #ddd;
+}
+
+
+.Left-Image {
+    width: 50%;
+    height: 100vh;
+    background-image: url(../../assets/Plant.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.Left-Image h1{
+    position: absolute;
+    top: 15%;
+    right: 28%;
+    font-size: xx-large;
+    font-weight: 400;
+    color: #3A424A;
+}
+
+.Left-Image h1 span{
+    color: #3062D4;
+    font-weight: 600;
+}
