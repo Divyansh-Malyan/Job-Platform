@@ -5,21 +5,21 @@
     font-family: "Poppins", sans-serif;
   }
   
-  /* Page Background */
+  /* ===== PAGE BACKGROUND ===== */
   .student-page {
-    background-color: #F1F5F9;
+    background-color: #F8FAFC; /* slightly softer than pure white */
     padding: 40px 0;
     display: flex;
     justify-content: center;
   }
   
-  /* Main Container */
+  /* ===== MAIN CONTAINER ===== */
   .profile-container {
     width: 75%;
     background: #FFFFFF;
     padding: 40px;
     border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   }
   
   /* ================= HEADER ================= */
@@ -42,29 +42,29 @@
     height: 130px;
     border-radius: 16px;
     object-fit: cover;
-    border: 3px solid #2563EB;
+    border: 3px solid #000; /* match navbar theme */
   }
   
   .profile-basic-info h2 {
     font-size: 24px;
-    color: #0F172A;
+    color: #111;
     margin-bottom: 6px;
   }
   
   .subtitle {
-    color: #64748B;
+    color: #555;
     margin-bottom: 4px;
   }
   
   .location {
-    color: #475569;
+    color: #777;
     font-size: 14px;
     margin-bottom: 10px;
   }
   
   .badge {
-    background-color: #DCFCE7;
-    color: #166534;
+    background-color: #000;
+    color: white;
     padding: 4px 10px;
     border-radius: 20px;
     font-size: 13px;
@@ -78,18 +78,23 @@
   }
   
   .primary-btn {
-    background-color: #2563EB;
+    background-color: #000;
     color: white;
     border: none;
     padding: 10px 18px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
+    transition: 0.3s;
+  }
+  
+  .primary-btn:hover {
+    background-color: #333;
   }
   
   .secondary-btn {
     background: white;
-    border: 1px solid #E2E8F0;
+    border: 1px solid #ddd;
     padding: 10px 18px;
     border-radius: 8px;
     cursor: pointer;
@@ -104,16 +109,16 @@
   
   .section {
     margin-bottom: 32px;
-    border-top: 1px solid #E2E8F0;
+    border-top: 1px solid #eee;
     padding-top: 24px;
   }
   
   .section h3 {
     margin-bottom: 16px;
-    color: #0F172A;
+    color: #111;
   }
   
-  /* ================= SKILLS (2-COLUMN GRID) ================= */
+  /* ================= SKILLS ================= */
   
   .skills-container {
     display: grid;
@@ -121,66 +126,70 @@
     gap: 20px 40px;
   }
   
-  .skill {
-    margin-bottom: 10px;
-  }
-  
   .skill-header {
     display: flex;
     justify-content: space-between;
     font-size: 14px;
     margin-bottom: 4px;
+    color: #333;
   }
   
   .progress-bar {
     width: 100%;
-    height: 6px; /* smaller, cleaner */
-    background-color: #E2E8F0;
+    height: 6px;
+    background-color: #eee;
     border-radius: 6px;
   }
   
   .progress {
     height: 100%;
-    background-color: #2563EB;
+    background-color: #000;
     border-radius: 6px;
   }
   
   /* ================= PROJECTS ================= */
   
   .project-card {
-    border: 1px solid #E2E8F0;
+    border: 1px solid #eee;
     padding: 16px;
     border-radius: 12px;
     margin-bottom: 16px;
+    transition: 0.2s ease;
+  }
+
+  .project-links button{
+    margin-right: 10px;
+  }
+  
+  .project-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   }
   
   .project-card h4 {
     margin-bottom: 6px;
-    color: #0F172A;
+    color: #111;
   }
   
   .project-tech {
     font-size: 14px;
-    color: #64748B;
+    color: #666;
     margin-bottom: 8px;
   }
-  
-  .project-links {
-    margin-top: 10px;
-    display: flex;
-    gap: 10px;
+
+  .project-card p{
+    margin-bottom: 10px;
   }
   
   /* ================= EXPERIENCE ================= */
   
   .experience-item h4 {
     margin-bottom: 4px;
-    color: #0F172A;
+    color: #111;
   }
   
   .experience-company {
     font-size: 14px;
-    color: #64748B;
+    color: #666;
     margin-bottom: 8px;
   }
   
@@ -191,7 +200,7 @@
   .experience-item li {
     margin-bottom: 6px;
     font-size: 14px;
-    color: #334155;
+    color: #444;
   }
   
   /* ================= RESPONSIVE ================= */
@@ -221,7 +230,7 @@
     }
   
     .skills-container {
-      grid-template-columns: 1fr; /* single column on mobile */
+      grid-template-columns: 1fr;
     }
   
     .profile-actions {
@@ -229,4 +238,3 @@
       justify-content: flex-start;
     }
   }
-  
