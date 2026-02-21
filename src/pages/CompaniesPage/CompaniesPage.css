@@ -1,0 +1,133 @@
+.companies-page {
+    padding: 60px 8%;
+    background: #f8fafc;
+    min-height: 100vh;
+  }
+  
+  /* HEADER */
+  
+  .companies-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .companies-header h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+  
+  .companies-header p {
+    color: #666;
+  }
+  
+  /* SEARCH */
+  
+  .company-search {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 60px;
+  }
+  
+  .company-search input {
+    width: 300px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    outline: none;
+  }
+  
+  .company-search button {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: #000;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  /* GRID */
+  
+  .companies-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  
+  /* CARD */
+  
+  .company-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid #eee;
+    text-align: center;
+    transition: 0.3s ease;
+  }
+  
+  .company-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+  
+  .company-logo {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 20px;
+  }
+  
+  .company-card h3 {
+    margin-bottom: 6px;
+  }
+  
+  .company-location {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 12px;
+  }
+  
+  .company-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .view-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #000;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  
+  .view-btn:hover {
+    background: #333;
+  }
+  
+  /* RESPONSIVE */
+  
+  @media (max-width: 1024px) {
+    .companies-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .companies-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .company-search input {
+      width: 100%;
+    }
+  }

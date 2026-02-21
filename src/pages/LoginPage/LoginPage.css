@@ -43,7 +43,7 @@ body {
     font-size: 12px;
     font-weight: 700;
     border: none;
-    background-color: #0062ff;
+    background-color: #000000;
     color: white;
     cursor: pointer;
 }
@@ -81,7 +81,7 @@ body {
 }
 
 .sign-up-redirect a{
-    color: #0062FF;
+    color: #000000;
     font-weight: 600;
 }
 .sign-up-redirect p{
@@ -125,6 +125,6 @@ body {
 }
 
 .right h1 span{
-    color: #3062D4;
+    color: #000000;
     font-weight: 600;
 }

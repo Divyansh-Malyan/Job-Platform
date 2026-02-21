@@ -15,7 +15,7 @@ const Navbar = ({ isHome = false }) => {
         {isHome ? (
           <>
             <Link to="/login" className="nav-link">Login</Link>
-            <Link to="/sign-up" className="primary-btn small-btn">
+            <Link to="/sign-up" className="nav-link">
               Sign-Up
             </Link>
           </>

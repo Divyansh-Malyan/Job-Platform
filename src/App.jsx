@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './components/MainLayout';
 import Home from './pages/HomePage/HomePage';
 import HomeLayout from './components/HomeLayout';
+import JobsPage from './pages/JobsPage/JobPage'
+import Companies from './pages/CompaniesPage/CompaniesPage';
 
 const App = () => {
   return (
@@ -19,6 +21,9 @@ const App = () => {
 
         <Route element={<MainLayout />}>
           <Route path="/student/profile" element={<Student />} />
+          <Route path='/jobs' element={<JobsPage/>}/>
+          <Route path='/companies' element={<Companies/>}/>
+
         </Route>
         {/* Without navbar */}
 
