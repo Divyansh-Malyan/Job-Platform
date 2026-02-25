@@ -2,6 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import ProfilePic from "../../assets/profile.jpg";
 import "./Navbar.css";
+import { useUserStore } from "../../store/userStore";
+
+const user = useUserStore((state) => state.user);
 
 const Navbar = ({ isHome = false }) => {
   return (

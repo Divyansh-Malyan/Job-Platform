@@ -1,26 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './LoginPage.css';
 import google from '../../assets/google.svg';
 import github from '../../assets/github.svg';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
+import { login } from '../../utils/Auth_Client'
+import toast from 'react-hot-toast';
+
 
 const LoginPage = () => {
+
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();   // 🔥 prevent page reload
+
+        if (!email || !password) {
+            toast.error("Please fill all fields");
+            return;
+        }
+
+        const res = await login(email, password);
+
+        if (!res.success) {
+            toast.error(res.message);
+        } else {
+            toast.success("Login successful 🚀");
+            navigate("/jobs"); // change route if needed
+        }
+    }
 
     return (
         <div className='login-page'>
 
 
-            <form className='left-side-form'>
+            <form
+            onSubmit={handleSubmit}
+            className='left-side-form'>
                 <h2>Log In</h2>
-                <input type="text" placeholder='Your email' />
-                <input type="password" placeholder='password' />
+
+                <input
+                    type="text"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder='Your email' />
+
+
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder='password' />
+
                 <button className='submit-button' type='submit'>Log In</button>
 
                 <a className='forget-pass' href="/forgot-password" >Forgot password?</a>
 
                 <div className="divider">
                     <hr />
-                        <span>or</span>
+                    <span>or</span>
                     <hr />
                 </div>
 
