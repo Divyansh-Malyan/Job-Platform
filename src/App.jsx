@@ -2,6 +2,10 @@ import React, {useEffect} from 'react'
 import LoginPage from './pages/LoginPage/LoginPage';
 import SignUp from './pages/SignUp/SignUp';
 import Student from './pages/Student/Student';
+import AboutUs from './pages/AboutUs/AboutUs';
+import Contact from './pages/ContactUs/ContactUs';
+import RecruiterPost from './pages/RecruiterPost/RecruiterPost';
+import JobDetail from './pages/JobDetail/Jobdetail';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './components/MainLayout';
 import Home from './pages/HomePage/HomePage';
@@ -9,15 +13,21 @@ import HomeLayout from './components/HomeLayout';
 import JobsPage from './pages/JobsPage/JobPage'
 import Companies from './pages/CompaniesPage/CompaniesPage';
 import { Toaster } from "react-hot-toast";
-import {useUserStore} from "./store/userStore";
+import useUserStore from "./store/userStore";
+import EditProfile from "./pages/EditProfile/EditProfile";
 
 
 const App = () => {
 
   const initializeUser = useUserStore((state)=> state.initializeUser);
+  
   useEffect(() => {
     initializeUser();
   }, []);
+
+  useEffect(() => {
+    initializeUser();
+  }, [initializeUser]);
 
   return (
 
@@ -34,13 +44,19 @@ const App = () => {
           <Route element={<MainLayout />}>
             <Route path="/student/profile" element={<Student />} />
             <Route path='/jobs' element={<JobsPage />} />
-            <Route path='/companies' element={<Companies />} />
+            <Route path='/about' element={<AboutUs />} />
+            <Route path='/jobs' element={<JobsPage />} />
+            <Route path='/contact' element={<Contact />} />
+            <Route path='/recruiterpost' element={<RecruiterPost />} />
+            <Route path='/jobdetail' element={<JobDetail />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
 
           </Route>
           {/* Without navbar */}
 
           <Route path="/login" element={<LoginPage />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/signup-recruiter" element={<SignUp />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -42,7 +42,7 @@ body {
     font-size: 12px;
     font-weight: 700;
     border: none;
-    background-color: #000000;
+    background-color: #309689;
     color: white;
     cursor: pointer;
 }
@@ -72,7 +72,7 @@ body {
 }
 
 .sign-up-redirect{
-    display: flex;
+    display: block;
     gap: 8px;
     margin-top: 20px;
     font-size: 12px;
@@ -80,11 +80,17 @@ body {
 }
 
 .sign-up-redirect a{
-    color: #000000;
+    color: #309689;
     font-weight: 600;
 }
 .sign-up-redirect p{
     color: #969AB8;
+}
+
+.sign-up-redirect section{
+    display: flex;
+    gap: 8px;
+    
 }
 
 .divider {
@@ -123,6 +129,6 @@ body {
 }
 
 .Left-Image h1 span{
-    color: #000000;
+    color: #309689;
     font-weight: 600;
 }

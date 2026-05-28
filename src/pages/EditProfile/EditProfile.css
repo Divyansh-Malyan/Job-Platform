@@ -1,0 +1,81 @@
+/* Page background */
+.edit-profile-page {
+    min-height: 100vh;
+    background: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+  }
+  
+  /* Card container */
+  .edit-profile-container {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+  }
+  
+  /* Heading */
+  .edit-profile-container h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 30px;
+    font-weight: 600;
+  }
+  
+  /* Form layout */
+  .edit-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  /* Inputs */
+  .edit-profile-form input,
+  .edit-profile-form textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    font-size: 14px;
+    background: #fafafa;
+  }
+  
+  /* Focus */
+  .edit-profile-form input:focus,
+  .edit-profile-form textarea:focus {
+    outline: none;
+    border: 1px solid black;
+  }
+  
+  /* Textarea */
+  .edit-profile-form textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  /* Button */
+  .save-profile-btn {
+    margin-top: 10px;
+    padding: 14px;
+    border-radius: 8px;
+    border: none;
+    background: black;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  /* Button hover */
+  .save-profile-btn:hover {
+    opacity: 0.9;
+  }
+  
+  /* Responsive */
+  @media (max-width: 600px) {
+    .edit-profile-container {
+      padding: 25px;
+    }
+  }

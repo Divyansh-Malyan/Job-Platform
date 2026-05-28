@@ -1,0 +1,159 @@
+.about-page {
+    width: 100%;
+    background: #f4f4f4;
+    min-height: 100vh;
+  }
+  
+  /* HERO */
+  
+  .about-hero {
+    height: 280px;
+  
+    background: #000;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    color: white;
+  }
+  
+  .about-hero h1 {
+    font-size: 72px;
+    font-weight: 700;
+  }
+
+  /* .about-hero {
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 140px 20px;
+  }
+  
+  .about-hero h1 {
+    font-size: 6rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+  }
+  
+  .about-hero p {
+    max-width: 750px;
+    margin: auto;
+    font-size: 1.2rem;
+    color: #cfcfcf;
+    line-height: 1.8;
+  }
+   */
+  /* CONTENT */
+  
+  .about-content {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    padding: 80px 8%;
+    flex-wrap: wrap;
+  }
+  
+  .about-card {
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    width: 350px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    transition: 0.3s;
+  }
+  
+  .about-card:hover {
+    transform: translateY(-8px);
+  }
+  
+  .about-card h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .about-card p {
+    color: #666;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+  
+  /* STATS */
+  
+  .about-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px 8% 80px;
+    flex-wrap: wrap;
+  }
+  
+  .stat-box {
+    background: #35b0a7;
+    color: white;
+    width: 260px;
+    padding: 40px;
+    border-radius: 25px;
+    text-align: center;
+  }
+  
+  .stat-box h2 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+  }
+  
+  .stat-box p {
+    font-size: 1.1rem;
+  }
+  
+  /* CTA */
+  
+  .about-cta {
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+  }
+  
+  .about-cta h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .about-cta p {
+    color: #cfcfcf;
+    margin-bottom: 35px;
+    font-size: 1.1rem;
+  }
+  
+  .about-cta button {
+    background: #35b0a7;
+    border: none;
+    padding: 16px 40px;
+    color: white;
+    font-size: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .about-cta button:hover {
+    opacity: 0.9;
+  }
+  
+  /* RESPONSIVE */
+  
+  @media (max-width: 768px) {
+  
+    .about-hero h1 {
+      font-size: 4rem;
+    }
+  
+    .about-card {
+      width: 100%;
+    }
+  
+    .about-cta h2 {
+      font-size: 2.2rem;
+    }
+  }

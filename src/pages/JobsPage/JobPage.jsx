@@ -1,95 +1,275 @@
 import React from "react";
 import "./JobPage.css";
+import Instagram from "../../assets/insta.svg";
+import Tesla from "../../assets/tesla.svg";
+import McDonalds from "../../assets/mcdi.svg";
+import Apple from "../../assets/apple.svg";
 
 const JobPage = () => {
   return (
     <div className="jobs-page">
 
-      {/* Page Header */}
-      <div className="jobs-header">
-        <h1>Explore Job Opportunities</h1>
-        <p>Find roles that match your skills and ambition.</p>
-      </div>
+      {/* HERO */}
+      <section className="jobs-hero">
+        <h1>Jobs</h1>
+      </section>
 
-      <div className="jobs-container">
+      {/* MAIN */}
+      <section className="jobs-main">
 
-        {/* Filters Sidebar */}
+        {/* SIDEBAR */}
         <aside className="filters">
-          <h3>Filters</h3>
 
-          <div className="filter-group">
-            <label>Role</label>
-            <select>
-              <option>All</option>
-              <option>Frontend Developer</option>
-              <option>Backend Developer</option>
-              <option>Full Stack Developer</option>
-            </select>
-          </div>
+          <h3>Search by Job Title</h3>
 
-          <div className="filter-group">
-            <label>Location</label>
+          <input
+            type="text"
+            placeholder="Job title or company"
+            className="search-input"
+          />
+
+          <div className="filter-section">
+            <h4>Location</h4>
+
             <select>
-              <option>All</option>
-              <option>Remote</option>
+              <option>Choose city</option>
               <option>Delhi</option>
               <option>Bangalore</option>
+              <option>Mumbai</option>
             </select>
           </div>
 
-          <div className="filter-group">
-            <label>Experience</label>
-            <select>
-              <option>All</option>
-              <option>0-1 Years</option>
-              <option>1-3 Years</option>
-              <option>3+ Years</option>
-            </select>
+          <div className="filter-section">
+            <h4>Category</h4>
+
+            <label><input type="checkbox" /> Commerce</label>
+            <label><input type="checkbox" /> Telecommunications</label>
+            <label><input type="checkbox" /> Hotels & Tourism</label>
+            <label><input type="checkbox" /> Education</label>
+            <label><input type="checkbox" /> Financial Services</label>
           </div>
+
+          <div className="filter-section">
+            <h4>Job Type</h4>
+
+            <label><input type="checkbox" /> Full Time</label>
+            <label><input type="checkbox" /> Part Time</label>
+            <label><input type="checkbox" /> Freelance</label>
+            <label><input type="checkbox" /> Internship</label>
+          </div>
+
+          <div className="filter-section">
+            <h4>Experience Level</h4>
+
+            <label><input type="checkbox" /> Fresher</label>
+            <label><input type="checkbox" /> Intermediate</label>
+            <label><input type="checkbox" /> Expert</label>
+          </div>
+
         </aside>
 
-        {/* Jobs List */}
-        <section className="jobs-list">
+        {/* RIGHT */}
+        <div className="jobs-content">
 
-          {/* Job Card */}
-          <div className="job-card">
-            <h3>Frontend Developer</h3>
-            <p className="company">Google • Remote</p>
-            <p className="salary">₹8-12 LPA</p>
-            <p className="description">
-              Looking for a React developer with strong UI skills.
-            </p>
+          <div className="jobs-topbar">
 
-            <div className="job-tags">
-              <span>React</span>
-              <span>JavaScript</span>
-              <span>CSS</span>
-            </div>
+            <p>Showing 6-6 of 10 results</p>
 
-            <button className="apply-btn">Apply Now</button>
+            <select className="sort-select">
+              <option>Sort by latest</option>
+              <option>Oldest</option>
+            </select>
+
           </div>
 
-          {/* Duplicate for layout demo */}
-          <div className="job-card">
-            <h3>Backend Developer</h3>
-            <p className="company">Amazon • Bangalore</p>
-            <p className="salary">₹10-15 LPA</p>
-            <p className="description">
-              Node.js backend role building scalable APIs.
-            </p>
+          {/* JOBS */}
+          <div className="jobs-list">
 
-            <div className="job-tags">
-              <span>Node.js</span>
-              <span>MongoDB</span>
-              <span>Express</span>
+            {/* CARD */}
+            <div className="job-card">
+
+              <div className="job-top">
+                <span className="job-time">10 min ago</span>
+              </div>
+
+              <div className="job-middle">
+
+                <div className="job-info">
+
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/5969/5969120.png"
+                    alt=""
+                    className="job-logo"
+                  />
+
+                  <div>
+                    <h3>Forward Security Director</h3>
+                    <p>Bauch, Schuppe and Schulist Co</p>
+                  </div>
+
+                </div>
+
+                <button className="details-btn">
+                  Job Details
+                </button>
+
+              </div>
+
+              <div className="job-tags">
+                <span>Hotels & Tourism</span>
+                <span>Full time</span>
+                <span>$40000-$42000</span>
+                <span>New-York, USA</span>
+              </div>
+
             </div>
 
-            <button className="apply-btn">Apply Now</button>
+            {/* CARD */}
+            <div className="job-card">
+
+              <div className="job-top">
+                <span className="job-time">12 min ago</span>
+              </div>
+
+              <div className="job-middle">
+
+                <div className="job-info">
+
+                  <img
+                    src="https://cdn-icons-png.flaticon.com/512/732/732221.png"
+                    alt=""
+                    className="job-logo"
+                  />
+
+                  <div>
+                    <h3>Regional Creative Facilitator</h3>
+                    <p>Wisokz - Becker Co</p>
+                  </div>
+
+                </div>
+
+                <button className="details-btn">
+                  Job Details
+                </button>
+
+              </div>
+
+              <div className="job-tags">
+                <span>Media</span>
+                <span>Part time</span>
+                <span>$28000-$32000</span>
+                <span>Los Angeles, USA</span>
+              </div>
+
+            </div>
+
           </div>
 
-        </section>
+        </div>
 
-      </div>
+      </section>
+
+      {/* TOP COMPANIES */}
+<section className="top-companies">
+
+<div className="companies-header">
+  <h2>Top Company</h2>
+
+  <p>
+    Discover leading companies actively hiring talented
+    students and professionals.
+  </p>
+</div>
+
+<div className="companies-grid">
+
+  {/* CARD */}
+  <div className="company-card">
+
+    <div className="company-icon">
+      <img
+        src={Instagram}
+        alt="Instagram"
+      />
+    </div>
+
+    <h3>Instagram</h3>
+
+    <p>
+      Build social experiences and connect billions
+      of people worldwide.
+    </p>
+
+    <span>8 open jobs</span>
+
+  </div>
+
+  {/* CARD */}
+  <div className="company-card">
+
+    <div className="company-icon">
+      <img
+        src={Tesla}
+        alt="Tesla"
+      />
+    </div>
+
+    <h3>Tesla</h3>
+
+    <p>
+      Shape the future of electric vehicles and
+      sustainable technology.
+    </p>
+
+    <span>18 open jobs</span>
+
+  </div>
+
+  {/* CARD */}
+  <div className="company-card">
+
+    <div className="company-icon">
+      <img
+        src={McDonalds}
+        alt="McDonalds"
+      />
+    </div>
+
+    <h3>McDonald’s</h3>
+
+    <p>
+      Join global operations and customer-focused
+      innovation teams.
+    </p>
+
+    <span>12 open jobs</span>
+
+  </div>
+
+  {/* CARD */}
+  <div className="company-card">
+
+    <div className="company-icon">
+      <img
+        src={Apple}
+        alt="Apple"
+      />
+    </div>
+
+    <h3>Apple</h3>
+
+    <p>
+      Create world-class products with cutting-edge
+      hardware and software.
+    </p>
+
+    <span>9 open jobs</span>
+
+  </div>
+
+</div>
+
+</section>
 
     </div>
   );

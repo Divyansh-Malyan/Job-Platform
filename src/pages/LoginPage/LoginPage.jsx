@@ -5,11 +5,13 @@ import github from '../../assets/github.svg';
 import { Link , useNavigate} from 'react-router-dom';
 import { login } from '../../utils/Auth_Client'
 import toast from 'react-hot-toast';
+import useUserStore from "../../store/userStore";
 
 
 const LoginPage = () => {
 
     const navigate = useNavigate();
+    const initializeUser = useUserStore((state) => state.initializeUser);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -28,7 +30,8 @@ const LoginPage = () => {
             toast.error(res.message);
         } else {
             toast.success("Login successful 🚀");
-            navigate("/jobs"); // change route if needed
+            await initializeUser();   // refresh Zustand store
+            navigate("/");
         }
     }
 

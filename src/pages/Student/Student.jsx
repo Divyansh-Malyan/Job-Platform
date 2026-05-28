@@ -1,8 +1,15 @@
 import React from "react";
 import "./Student.css";
 import ProfilePic from "../../assets/profile.jpg";
+import useUserStore from "../../store/userStore";
+import {useNavigate} from "react-router-dom"
 
 const Student = () => {
+    const navigate = useNavigate();
+    const user = useUserStore((state) => state.user);
+    const profile = useUserStore((state) => state.profile);
+    const loading = useUserStore((state) => state.loading);
+    if (loading) return <p>Loading...</p>
     return (
         <div className="student-page">
             <div className="profile-container">
@@ -13,9 +20,10 @@ const Student = () => {
                         <img src={ProfilePic} alt="Profile" className="profile-image" />
 
                         <div className="profile-basic-info">
-                            <h2>Divyansh Malyan</h2>
-                            <p className="subtitle">B.Tech CSE • 2023–2027</p>
-                            <p className="location">Dehradun, India</p>
+                            <h2>{profile.name}</h2>
+                            
+                            <p className="subtitle">{profile.course} • {profile.batch}</p>
+                            <p className="location">{profile.city}, {profile.country}</p>
 
                             <div className="availability">
                                 <span className="badge">Open to Internship</span>
@@ -26,7 +34,9 @@ const Student = () => {
                     {/* Role-based buttons (UI only for now) */}
                     <div className="profile-actions">
                         <button className="primary-btn">Download Resume</button>
-                        <button className="secondary-btn">Edit Profile</button>
+                        <button className="secondary-btn"
+                        onClick={() => navigate("/edit-profile")}
+                        >Edit Profile</button>
                     </div>
                 </div>
 
@@ -34,9 +44,7 @@ const Student = () => {
                 <section className="section">
                     <h3>Professional Summary</h3>
                     <p>
-                        Computer Science student specializing in full-stack web development.
-                        Built scalable applications with authentication and role-based dashboards.
-                        Strong problem-solving skills with 400+ DSA problems solved.
+                        {profile.bio || "Aspiring software developer with a passion for building impactful applications. Skilled in React, Java, and Node.js. Eager to contribute to innovative projects and grow as a developer."}
                     </p>
                 </section>
 
