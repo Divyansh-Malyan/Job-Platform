@@ -13,10 +13,34 @@ import Hotel from "../../assets/Hotel.svg";
 import Education from "../../assets/Education.svg";
 import Finence from "../../assets/Finence.svg";
 import Transport from "../../assets/Transport.svg";
-
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 const Home = () => {
+  const [jobs, setJobs] = useState([]);
+  useEffect(() => {
+
+    const fetchJobs = async () => {
+
+      try {
+
+        const response = await axios.get(
+          "http://localhost:8080/jobs"
+        );
+
+        setJobs(response.data.jobs.slice(0, 5));
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+    };
+
+    fetchJobs();
+
+  }, []);
   return (
     <div className="home">
 
@@ -66,212 +90,66 @@ const Home = () => {
 
         <div className="job-list">
 
-          {/* CARD 1 */}
-          <div className="job-card">
+          {jobs.map((job) => (
 
-            <div className="job-top">
-              <span className="job-time">10 min ago</span>
-            </div>
+            <div
+              className="job-card"
+              key={job.id}
+            >
 
-            <div className="job-title-row">
+              <div className="job-top">
+                <span className="job-time">
+                  New
+                </span>
+              </div>
 
-              <img
-                className="job-logo"
-                src="https://cdn-icons-png.flaticon.com/512/5969/5969120.png"
-                alt="company-logo"
-              />
+              <div className="job-title-row">
 
-              <div>
-                <h3>Forward Security Director</h3>
-                <p className="company-name">
-                  Bauch, Schuppe and Schulist Co.
-                </p>
+                <img
+                  className="job-logo"
+                  src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
+                  alt="company-logo"
+                />
+
+                <div>
+                  <h3>{job.role}</h3>
+
+                  <p className="company-name">
+                    {job.company_name || "Company"}
+                  </p>
+                </div>
+
+              </div>
+
+              <div className="job-bottom">
+
+                <div className="job-tag">
+
+                  <span>{job.job_type}</span>
+
+                  <span>{job.salary}</span>
+
+                  <span>{job.location_job}</span>
+
+                  <span>{job.exp_required}</span>
+
+                </div>
+
+                <Link
+                  to={`/jobdetail/${job.id}`}
+                  className="job-btn"
+                >
+                  Job Details
+                </Link>
+
               </div>
 
             </div>
 
-            <div className="job-bottom">
-
-              <div className="job-tag">
-                <span>Hotels & Tourism</span>
-                <span>Full time</span>
-                <span>$40000-$42000</span>
-                <span>New-York, USA</span>
-              </div>
-
-              <Link to="/jobs" className="job-btn">
-                Job Details
-              </Link>
-
-            </div>
-
-          </div>
-
-          {/* CARD 2 */}
-          <div className="job-card">
-
-            <div className="job-top">
-              <span className="job-time">12 min ago</span>
-            </div>
-
-            <div className="job-title-row">
-
-              <img
-                className="job-logo"
-                src="https://cdn-icons-png.flaticon.com/512/732/732221.png"
-                alt="company-logo"
-              />
-
-              <div>
-                <h3>Regional Creative Facilitator</h3>
-                <p className="company-name">
-                  Wisokz - Becker Co.
-                </p>
-              </div>
-
-            </div>
-
-            <div className="job-bottom">
-
-              <div className="job-tag">
-                <span>Media</span>
-                <span>Part time</span>
-                <span>$28000-$32000</span>
-                <span>Los Angeles, USA</span>
-              </div>
-
-              <Link to="/jobs" className="job-btn">
-                Job Details
-              </Link>
-
-            </div>
-
-          </div>
-
-          {/* CARD 3 */}
-          <div className="job-card">
-
-            <div className="job-top">
-              <span className="job-time">15 min ago</span>
-            </div>
-
-            <div className="job-title-row">
-
-              <img
-                className="job-logo"
-                src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
-                alt="company-logo"
-              />
-
-              <div>
-                <h3>Internal Integration Planner</h3>
-                <p className="company-name">
-                  Mraz, Quigley and Feest Inc.
-                </p>
-              </div>
-
-            </div>
-
-            <div className="job-bottom">
-
-              <div className="job-tag">
-                <span>Construction</span>
-                <span>Full time</span>
-                <span>$48000-$50000</span>
-                <span>Texas, USA</span>
-              </div>
-
-              <Link to="/jobs" className="job-btn">
-                Job Details
-              </Link>
-
-            </div>
-
-          </div>
-
-          {/* CARD 4 */}
-          <div className="job-card">
-
-            <div className="job-top">
-              <span className="job-time">24 min ago</span>
-            </div>
-
-            <div className="job-title-row">
-
-              <img
-                className="job-logo"
-                src="https://cdn-icons-png.flaticon.com/512/5969/5968853.png"
-                alt="company-logo"
-              />
-
-              <div>
-                <h3>District Intranet Director</h3>
-                <p className="company-name">
-                  VonRueden - Weber Co
-                </p>
-              </div>
-
-            </div>
-
-            <div className="job-bottom">
-
-              <div className="job-tag">
-                <span>Commerce</span>
-                <span>Full time</span>
-                <span>$42000-$48000</span>
-                <span>Florida, USA</span>
-              </div>
-
-              <Link to="/jobs" className="job-btn">
-                Job Details
-              </Link>
-
-            </div>
-
-          </div>
-
-          {/* CARD 5 */}
-          <div className="job-card">
-
-            <div className="job-top">
-              <span className="job-time">26 min ago</span>
-            </div>
-
-            <div className="job-title-row">
-
-              <img
-                className="job-logo"
-                src="https://cdn-icons-png.flaticon.com/512/5968/5968672.png"
-                alt="company-logo"
-              />
-
-              <div>
-                <h3>Corporate Tactics Facilitator</h3>
-                <p className="company-name">
-                  Cormier, Turner and Flatley Inc
-                </p>
-              </div>
-
-            </div>
-
-            <div className="job-bottom">
-
-              <div className="job-tag">
-                <span>Commerce</span>
-                <span>Full time</span>
-                <span>$38000-$40000</span>
-                <span>Boston, USA</span>
-              </div>
-
-              <Link to="/jobs" className="job-btn">
-                Job Details
-              </Link>
-
-            </div>
-
-          </div>
+          ))}
 
         </div>
+
       </section>
 
       {/* CATEGORY SECTION */}

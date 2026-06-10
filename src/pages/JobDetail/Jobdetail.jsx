@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import "./JobDetail.css";
+import { applyJob, checkApplied } from "../../api/applicationApi";
+import useUserStore from "../../store/userStore";
+import { useNavigate } from "react-router-dom";
 
 import {
   BriefcaseBusiness,
@@ -11,6 +16,163 @@ import {
 } from "lucide-react";
 
 const JobDetail = () => {
+
+  const user = useUserStore((state) => state.user);
+  const profile = useUserStore((state) => state.profile);
+  const { id } = useParams();
+  console.log("Job ID from URL:", id);
+  const [job, setJob] = useState(null);
+  const [applied, setApplied] = useState(false);
+  const [relatedJobs, setRelatedJobs] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+
+    const checkUserApplication = async () => {
+
+      if (!profile || !job) return;
+
+      try {
+
+        const response = await checkApplied(
+          job.id,
+          profile.user_id
+        );
+
+        setApplied(response.applied);
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+    };
+
+    checkUserApplication();
+
+  }, [job, profile]);
+
+  useEffect(() => {
+
+    const fetchJob = async () => {
+  
+      try {
+  
+        const response = await axios.get(
+          `http://localhost:8080/jobs/${id}`
+        );
+  
+        const currentJob = response.data.job;
+  
+        setJob(currentJob);
+  
+        const jobsResponse = await axios.get(
+          "http://localhost:8080/jobs"
+        );
+  
+        const filteredJobs = jobsResponse.data.jobs
+          .filter((j) => {
+  
+            if (j.id === currentJob.id) {
+              return false;
+            }
+  
+            const sameJobType =
+              j.job_type?.toLowerCase().trim() ===
+              currentJob.job_type?.toLowerCase().trim();
+  
+            const sameLocation =
+              j.location_job?.toLowerCase().trim() ===
+              currentJob.location_job?.toLowerCase().trim();
+  
+            const roleKeyword =
+              currentJob.role
+                ?.toLowerCase()
+                .split(" ")[0];
+  
+            const similarRole =
+              j.role
+                ?.toLowerCase()
+                .includes(roleKeyword);
+  
+            return (
+              sameJobType ||
+              sameLocation ||
+              similarRole
+            );
+  
+          });
+  
+        if (filteredJobs.length > 0) {
+  
+          setRelatedJobs(
+            filteredJobs.slice(0, 3)
+          );
+  
+        } else {
+  
+          const fallbackJobs = jobsResponse.data.jobs
+            .filter((j) => j.id !== currentJob.id)
+            .slice(0, 2);
+  
+          setRelatedJobs(fallbackJobs);
+  
+        }
+  
+      } catch (error) {
+  
+        console.error(error);
+  
+      }
+    };
+  
+    fetchJob();
+  
+  }, [id]);
+
+  if (!job) {
+    return <h2>Loading...</h2>;
+  }
+
+  console.log("User:", user);
+  console.log("Profile:", profile);
+
+  const handleApply = async () => {
+
+    if (!user || !profile) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+
+      await applyJob(
+        job.id,
+        profile.user_id
+      );
+
+      setApplied(true);
+
+      alert("Application submitted successfully");
+
+    } catch (error) {
+
+      if (
+        error.response?.data?.message ===
+        "You have already applied for this job"
+      ) {
+        setApplied(true);
+      }
+
+      alert(
+        error.response?.data?.message ||
+        "Failed To Apply"
+      );
+
+    }
+  };
+
   return (
     <div className="job-detail-page">
 
@@ -46,38 +208,48 @@ const JobDetail = () => {
               />
 
               <div>
-                <h2>Corporate Solutions Executive</h2>
-                <p>Leffler and Sons</p>
+                <h2>{job.role}</h2>
+                <p>{job.location_job}</p>
               </div>
 
             </div>
 
             <div className="job-meta">
 
-              <div className="meta-item">
+              {/* <div className="meta-item">
                 <BriefcaseBusiness size={18} />
                 <span>Commerce</span>
-              </div>
+              </div> */}
 
               <div className="meta-item">
                 <Clock3 size={18} />
-                <span>Full Time</span>
+                <span>{job.job_type}</span>
               </div>
 
               <div className="meta-item">
                 <Wallet size={18} />
-                <span>$40000-$42000</span>
+                <span>{job.salary}</span>
               </div>
 
               <div className="meta-item">
                 <MapPin size={18} />
-                <span>New-York, USA</span>
+                <span>{job.location_job}</span>
               </div>
 
             </div>
 
-            <button className="apply-btn">
-              Apply Job
+            <button
+              className="apply-btn"
+              disabled={applied}
+              onClick={handleApply}
+            >
+              {
+                applied
+                  ? "Applied"
+                  : !user
+                    ? "Login to Apply"
+                    : "Apply Job"
+              }
             </button>
 
           </div>
@@ -88,15 +260,7 @@ const JobDetail = () => {
 
             <h3>Job Description</h3>
 
-            <p>
-              Nunc sed a nisl purus. Nibh dis faucibus proin lacus tristique.
-              Sit congue non vitae odio sit erat in. Felis eu ultrices a sed massa.
-            </p>
-
-            <p>
-              Commodo fringilla sed tempor risus laoreet ultricies ipsum.
-              Habitasse morbi faucibus in iaculis lectus.
-            </p>
+            <p>{job.description_job}</p>
 
           </div>
 
@@ -137,24 +301,20 @@ const JobDetail = () => {
 
           <div className="detail-section">
 
-            <h3>Professional Skills</h3>
+            <h3>Required Skills</h3>
 
             <div className="points-list">
 
-              <div className="point-item">
-                <CircleCheck size={18} />
-                <p>React.js & Frontend Development</p>
-              </div>
+              {job.skills_required
+                ?.split(",")
+                .map((skill, index) => (
 
-              <div className="point-item">
-                <CircleCheck size={18} />
-                <p>REST APIs & Backend Integration</p>
-              </div>
+                  <div className="point-item" key={index}>
+                    <CircleCheck size={18} />
+                    <p>{skill.trim()}</p>
+                  </div>
 
-              <div className="point-item">
-                <CircleCheck size={18} />
-                <p>Communication & Team Collaboration</p>
-              </div>
+                ))}
 
             </div>
 
@@ -168,11 +328,13 @@ const JobDetail = () => {
 
             <div className="tags">
 
-              <span>Full Time</span>
-              <span>Commerce</span>
-              <span>New-York</span>
-              <span>Corporate</span>
-              <span>Location</span>
+              <span>{job.job_type}</span>
+
+              <span>{job.location_job}</span>
+
+              <span>{job.exp_required}</span>
+
+              <span>{job.salary}</span>
 
             </div>
 
@@ -190,57 +352,70 @@ const JobDetail = () => {
 
             {/* JOB CARD */}
 
-            <div className="related-job-card">
+            {
+              relatedJobs.map((relatedJob) => (
 
-              <div className="related-top">
+                <div
+                  className="related-job-card"
+                  key={relatedJob.id}
+                >
 
-                <span>24 min ago</span>
+                  <div className="related-top">
 
-                <Bookmark size={18} />
+                    <span>Related Job</span>
 
-              </div>
+                    <Bookmark size={18} />
 
-              <div className="related-title">
+                  </div>
 
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
-                  alt="company"
-                />
+                  <div className="related-title">
 
-                <div>
-                  <h3>Internal Creative Coordinator</h3>
-                  <p>Green Group</p>
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
+                      alt="company"
+                    />
+
+                    <div>
+                      <h3>{relatedJob.role}</h3>
+
+                      <p>
+                        {relatedJob.company_name || "Company"}
+                      </p>
+                    </div>
+
+                  </div>
+
+                  <div className="related-meta">
+
+                    <div className="meta-item">
+                      <Clock3 size={16} />
+                      <span>{relatedJob.job_type}</span>
+                    </div>
+
+                    <div className="meta-item">
+                      <Wallet size={16} />
+                      <span>{relatedJob.salary}</span>
+                    </div>
+
+                    <div className="meta-item">
+                      <MapPin size={16} />
+                      <span>{relatedJob.location_job}</span>
+                    </div>
+
+                    <button
+                      onClick={() =>
+                        navigate(`/jobdetail/${relatedJob.id}`)
+                      }
+                    >
+                      Job Details
+                    </button>
+
+                  </div>
+
                 </div>
 
-              </div>
-
-              <div className="related-meta">
-
-                <div className="meta-item">
-                  <BriefcaseBusiness size={16} />
-                  <span>Commerce</span>
-                </div>
-
-                <div className="meta-item">
-                  <Clock3 size={16} />
-                  <span>Full Time</span>
-                </div>
-
-                <div className="meta-item">
-                  <Wallet size={16} />
-                  <span>$44000-$46000</span>
-                </div>
-
-                <div className="meta-item">
-                  <MapPin size={16} />
-                  <span>New-York, USA</span>
-                </div>
-
-                <button>Job Details</button>
-
-              </div>
-
-            </div>
+              ))
+            }
 
           </div>
 
@@ -256,27 +431,27 @@ const JobDetail = () => {
 
             <div className="overview-item">
               <span>Job Title</span>
-              <p>Corporate Solutions Executive</p>
+              <p>{job.role}</p>
             </div>
 
             <div className="overview-item">
               <span>Job Type</span>
-              <p>Full Time</p>
+              <p>{job.job_type}</p>
             </div>
 
             <div className="overview-item">
               <span>Experience</span>
-              <p>5 Years</p>
+              <p>{job.exp_required}</p>
             </div>
 
             <div className="overview-item">
               <span>Offered Salary</span>
-              <p>$40000-$42000</p>
+              <p>{job.salary}</p>
             </div>
 
             <div className="overview-item">
               <span>Location</span>
-              <p>New-York, USA</p>
+              <p>{job.location_job}</p>
             </div>
 
           </div>

@@ -1,0 +1,303 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.saved-jobs-page {
+    min-height: 100vh;
+    background: #f5f5f5;
+}
+
+/* HERO */
+
+.saved-jobs-hero {
+    background: #000;
+    color: white;
+    text-align: center;
+    padding: 120px 20px;
+}
+
+.saved-jobs-hero h1 {
+    font-size: 5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.saved-jobs-hero p {
+    color: #cfcfcf;
+    font-size: 1.1rem;
+}
+
+/* CONTAINER */
+
+.saved-jobs-container {
+    max-width: 1400px;
+    margin: auto;
+    padding: 70px 7%;
+}
+
+/* STATS */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-bottom: 35px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 24px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,.04);
+    transition: .3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+}
+
+.stat-card h2 {
+    font-size: 3rem;
+    color: #35b0a7;
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    color: #666;
+}
+
+/* FILTER */
+
+.filter-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.search-box {
+    flex: 1;
+    padding: 16px 18px;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    outline: none;
+}
+
+.filter-bar select {
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid #ddd;
+    outline: none;
+}
+
+/* GRID */
+
+.saved-jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+/* CARD */
+
+.saved-job-card {
+    background: white;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.04);
+    transition: .3s;
+}
+
+.saved-job-card:hover {
+    transform: translateY(-5px);
+}
+
+.job-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.company-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+.job-header h3 {
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+}
+
+.company-name {
+    color: #666;
+}
+
+.job-details p {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.job-details h4 {
+    color: #35b0a7;
+    margin-bottom: 15px;
+}
+
+/* BADGE */
+
+.saved-badge {
+    display: inline-block;
+
+    background: #e7efef;
+    color: #35b0a7;
+
+    padding: 8px 14px;
+    border-radius: 20px;
+
+    font-size: .9rem;
+    font-weight: 600;
+
+    margin-bottom: 15px;
+}
+
+.saved-date {
+    color: #777;
+    margin-bottom: 20px;
+}
+
+/* BUTTONS */
+
+.job-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.primary-btn {
+    background: #35b0a7;
+    color: white;
+    border: none;
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.secondary-btn {
+    background: white;
+    color: #35b0a7;
+    border: 2px solid #35b0a7;
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.secondary-btn:hover {
+    background: #35b0a7;
+    color: white;
+}
+
+.remove-btn {
+    background: #ffe8e8;
+    color: #d32f2f;
+    border: none;
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.remove-btn:hover {
+    background: #ffd9d9;
+}
+
+/* EMPTY */
+
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 15px;
+}
+
+.empty-state h2 {
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .saved-jobs-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .saved-jobs-hero h1 {
+        font-size: 3.5rem;
+    }
+
+    .filter-bar {
+        flex-direction: column;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .saved-jobs-container {
+        padding: 50px 5%;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .saved-jobs-hero {
+        padding: 90px 20px;
+    }
+
+    .saved-jobs-hero h1 {
+        font-size: 3rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .job-actions {
+        flex-direction: column;
+    }
+
+    .job-actions button {
+        width: 100%;
+    }
+}
+
+.jobs-count {
+    margin-bottom: 20px;
+}
+
+.jobs-count h3 {
+    font-size: 1.4rem;
+    color: #111;
+}

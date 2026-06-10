@@ -32,13 +32,13 @@ const signup = async (name, email, password, role, companyName) => {
   const { error: dberror } = await supabase.from("User").insert([
     {
       user_id: user.id,
-      name: name,
+      // name: name,
       email: email,
       role: role,
-      company: role === "recruiter" ? companyName : null
     }
   ])
   if (dberror) {
+    console.log("DB Error:", dberror);
     return { success: false, message: dberror.message }
   }
   return { success: true, user: data.user }

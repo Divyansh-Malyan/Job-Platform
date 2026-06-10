@@ -1,11 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./JobPage.css";
 import Instagram from "../../assets/insta.svg";
 import Tesla from "../../assets/tesla.svg";
 import McDonalds from "../../assets/mcdi.svg";
 import Apple from "../../assets/apple.svg";
+import { getJobs } from "../../api/jobApi";
+import { useNavigate } from "react-router-dom"; 
 
 const JobPage = () => {
+  const navigate = useNavigate();
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    const fetchJobs = async () => {
+      try {
+
+        const data = await getJobs();
+
+        setJobs(data.jobs);
+
+      } catch (error) {
+
+        console.error(error);
+
+      } finally {
+
+        setLoading(false);
+
+      }
+    };
+
+    fetchJobs();
+
+  }, []);
+
+  if (loading) {
+    return <h2>Loading Jobs...</h2>;
+  }
+  console.log(jobs);
+
   return (
     <div className="jobs-page">
 
@@ -83,85 +118,60 @@ const JobPage = () => {
           </div>
 
           {/* JOBS */}
+
           <div className="jobs-list">
 
-            {/* CARD */}
-            <div className="job-card">
+            {jobs.map((job) => (
 
-              <div className="job-top">
-                <span className="job-time">10 min ago</span>
-              </div>
+              <div className="job-card" key={job.id}>
 
-              <div className="job-middle">
+                <div className="job-top">
+                  <span className="job-time">
+                    New
+                  </span>
+                </div>
 
-                <div className="job-info">
+                <div className="job-middle">
 
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/5969/5969120.png"
-                    alt=""
-                    className="job-logo"
-                  />
+                  <div className="job-info">
 
-                  <div>
-                    <h3>Forward Security Director</h3>
-                    <p>Bauch, Schuppe and Schulist Co</p>
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/512/5969/5969120.png"
+                      alt=""
+                      className="job-logo"
+                    />
+
+                    <div>
+                      <h3>{job.role}</h3>
+                      <p>{job.description_job}</p>
+                    </div>
+
                   </div>
+
+                  <button
+                    className="details-btn"
+                    onClick={() => navigate(`/jobdetail/${job.id}`)}
+                  >
+                    Job Details
+                  </button>
 
                 </div>
 
-                <button className="details-btn">
-                  Job Details
-                </button>
+                <div className="job-tags">
 
-              </div>
+                  <span>{job.job_type}</span>
 
-              <div className="job-tags">
-                <span>Hotels & Tourism</span>
-                <span>Full time</span>
-                <span>$40000-$42000</span>
-                <span>New-York, USA</span>
-              </div>
+                  <span>{job.salary}</span>
 
-            </div>
+                  <span>{job.location_job}</span>
 
-            {/* CARD */}
-            <div className="job-card">
-
-              <div className="job-top">
-                <span className="job-time">12 min ago</span>
-              </div>
-
-              <div className="job-middle">
-
-                <div className="job-info">
-
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/732/732221.png"
-                    alt=""
-                    className="job-logo"
-                  />
-
-                  <div>
-                    <h3>Regional Creative Facilitator</h3>
-                    <p>Wisokz - Becker Co</p>
-                  </div>
+                  <span>{job.exp_required}</span>
 
                 </div>
 
-                <button className="details-btn">
-                  Job Details
-                </button>
-
               </div>
 
-              <div className="job-tags">
-                <span>Media</span>
-                <span>Part time</span>
-                <span>$28000-$32000</span>
-                <span>Los Angeles, USA</span>
-              </div>
-
-            </div>
+            ))}
 
           </div>
 
@@ -170,106 +180,106 @@ const JobPage = () => {
       </section>
 
       {/* TOP COMPANIES */}
-<section className="top-companies">
+      <section className="top-companies">
 
-<div className="companies-header">
-  <h2>Top Company</h2>
+        <div className="companies-header">
+          <h2>Top Company</h2>
 
-  <p>
-    Discover leading companies actively hiring talented
-    students and professionals.
-  </p>
-</div>
+          <p>
+            Discover leading companies actively hiring talented
+            students and professionals.
+          </p>
+        </div>
 
-<div className="companies-grid">
+        <div className="companies-grid">
 
-  {/* CARD */}
-  <div className="company-card">
+          {/* CARD */}
+          <div className="company-card">
 
-    <div className="company-icon">
-      <img
-        src={Instagram}
-        alt="Instagram"
-      />
-    </div>
+            <div className="company-icon">
+              <img
+                src={Instagram}
+                alt="Instagram"
+              />
+            </div>
 
-    <h3>Instagram</h3>
+            <h3>Instagram</h3>
 
-    <p>
-      Build social experiences and connect billions
-      of people worldwide.
-    </p>
+            <p>
+              Build social experiences and connect billions
+              of people worldwide.
+            </p>
 
-    <span>8 open jobs</span>
+            <span>8 open jobs</span>
 
-  </div>
+          </div>
 
-  {/* CARD */}
-  <div className="company-card">
+          {/* CARD */}
+          <div className="company-card">
 
-    <div className="company-icon">
-      <img
-        src={Tesla}
-        alt="Tesla"
-      />
-    </div>
+            <div className="company-icon">
+              <img
+                src={Tesla}
+                alt="Tesla"
+              />
+            </div>
 
-    <h3>Tesla</h3>
+            <h3>Tesla</h3>
 
-    <p>
-      Shape the future of electric vehicles and
-      sustainable technology.
-    </p>
+            <p>
+              Shape the future of electric vehicles and
+              sustainable technology.
+            </p>
 
-    <span>18 open jobs</span>
+            <span>18 open jobs</span>
 
-  </div>
+          </div>
 
-  {/* CARD */}
-  <div className="company-card">
+          {/* CARD */}
+          <div className="company-card">
 
-    <div className="company-icon">
-      <img
-        src={McDonalds}
-        alt="McDonalds"
-      />
-    </div>
+            <div className="company-icon">
+              <img
+                src={McDonalds}
+                alt="McDonalds"
+              />
+            </div>
 
-    <h3>McDonald’s</h3>
+            <h3>McDonald’s</h3>
 
-    <p>
-      Join global operations and customer-focused
-      innovation teams.
-    </p>
+            <p>
+              Join global operations and customer-focused
+              innovation teams.
+            </p>
 
-    <span>12 open jobs</span>
+            <span>12 open jobs</span>
 
-  </div>
+          </div>
 
-  {/* CARD */}
-  <div className="company-card">
+          {/* CARD */}
+          <div className="company-card">
 
-    <div className="company-icon">
-      <img
-        src={Apple}
-        alt="Apple"
-      />
-    </div>
+            <div className="company-icon">
+              <img
+                src={Apple}
+                alt="Apple"
+              />
+            </div>
 
-    <h3>Apple</h3>
+            <h3>Apple</h3>
 
-    <p>
-      Create world-class products with cutting-edge
-      hardware and software.
-    </p>
+            <p>
+              Create world-class products with cutting-edge
+              hardware and software.
+            </p>
 
-    <span>9 open jobs</span>
+            <span>9 open jobs</span>
 
-  </div>
+          </div>
 
-</div>
+        </div>
 
-</section>
+      </section>
 
     </div>
   );

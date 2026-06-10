@@ -123,6 +123,46 @@ textarea {
     resize: none;
 }
 
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+  }
+  
+  .draft-btn {
+    flex: 1;
+    padding: 16px;
+    border-radius: 14px;
+    border: 2px solid #35b0a7;
+    background: white;
+    color: #35b0a7;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+  }
+  
+  .draft-btn:hover {
+    background: #35b0a7;
+    color: white;
+  }
+  
+  .publish-btn {
+    flex: 1;
+    padding: 16px;
+    border-radius: 14px;
+    border: none;
+    background: #35b0a7;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+  }
+  
+  .publish-btn:hover {
+    transform: translateY(-2px);
+    opacity: .95;
+  }
+
 /* BUTTON */
 
 .post-job-card button {
