@@ -577,10 +577,10 @@
   font-size: .9rem;
 }
 .empty-state {
+  padding: 40px 20px;
   text-align: center;
-  padding: 40px;
-  background: #fafafa;
-  border-radius: 20px;
+  border-radius: 16px;
+  background: #fff;
 }
 
 .empty-state h4 {

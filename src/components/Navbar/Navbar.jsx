@@ -10,6 +10,7 @@ import { IoIosNotifications } from "react-icons/io";
 const Navbar = () => {
 
   const user = useUserStore((state) => state.user);
+  const profile = useUserStore((state) => state.profile);
   const clearUser = useUserStore((state) => state.clearUser);
 
   const navigate = useNavigate();
@@ -99,12 +100,33 @@ const Navbar = () => {
           Home
         </NavLink>
 
-        <NavLink
-          to="/jobs"
-          className="nav-link"
-        >
-          Jobs
-        </NavLink>
+        {
+          profile?.role === "recruiter" ? (
+            <>
+
+              <NavLink
+                to="/recruiterpost"
+                className="nav-link"
+              >
+                Post Job
+              </NavLink>
+
+              <NavLink
+                to="/manage-jobs"
+                className="nav-link"
+              >
+                Manage Jobs
+              </NavLink>
+            </>
+          ) : (
+            <NavLink
+              to="/jobs"
+              className="nav-link"
+            >
+              Jobs
+            </NavLink>
+          )
+        }
 
         <NavLink
           to="/about"
@@ -155,15 +177,15 @@ const Navbar = () => {
               className="notification-link"
             >
 
-<IoIosNotifications />
+              <IoIosNotifications />
 
-              {notificationCount > 0 && (
-
-                <span className="notification-count">
-                  {notificationCount}
-                </span>
-
-              )}
+              {
+                notificationCount > 0 && (
+                  <span className="notification-count">
+                    {notificationCount}
+                  </span>
+                )
+              }
 
             </Link>
 
@@ -191,58 +213,75 @@ const Navbar = () => {
 
               </div>
 
-              {showMenu && (
+              {
+                showMenu && (
 
-                <div className="dropdown-menu">
+                  <div className="dropdown-menu">
 
-                  <button
-                    onClick={() => {
+                    <button
+                      onClick={() => {
 
-                      navigate(
-                        "/student/profile"
-                      );
+                        if (
+                          profile?.role ===
+                          "recruiter"
+                        ) {
 
-                      setShowMenu(false);
+                          navigate(
+                            "/recruiterdashboard"
+                          );
 
-                    }}
-                  >
-                    My Profile
-                  </button>
+                        } else {
 
-                  <button
-                    onClick={() => {
+                          navigate(
+                            "/student/profile"
+                          );
 
-                      navigate(
-                        "/settings"
-                      );
+                        }
 
-                      setShowMenu(false);
+                        setShowMenu(false);
 
-                    }}
-                  >
-                    Settings
-                  </button>
+                      }}
+                    >
+                      My Profile
+                    </button>
 
-                  <div className="dropdown-divider"></div>
+                    <button
+                      onClick={() => {
 
-                  <button
-                    onClick={() => {
+                        navigate(
+                          "/settings"
+                        );
 
-                      setShowMenu(false);
+                        setShowMenu(false);
 
-                      handleLogout();
+                      }}
+                    >
+                      Settings
+                    </button>
 
-                    }}
-                    disabled={loading}
-                  >
-                    {loading
-                      ? "Logging out..."
-                      : "Logout"}
-                  </button>
+                    <div className="dropdown-divider"></div>
 
-                </div>
+                    <button
+                      onClick={() => {
 
-              )}
+                        setShowMenu(false);
+
+                        handleLogout();
+
+                      }}
+                      disabled={loading}
+                    >
+                      {
+                        loading
+                          ? "Logging out..."
+                          : "Logout"
+                      }
+                    </button>
+
+                  </div>
+
+                )
+              }
 
             </div>
 

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import "./ManageJobs.css";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { getRecruiterJobs, closeJob, deleteJob } from "../../api/jobApi";
+import useUserStore from "../../store/userStore";
 
 const ManageJobs = () => {
 
@@ -8,38 +11,10 @@ const ManageJobs = () => {
 
     const [search, setSearch] = useState("");
 
-    const jobs = [
-        {
-            id: 1,
-            title: "Frontend Developer",
-            location: "Delhi",
-            type: "Full Time",
-            salary: "₹8 LPA",
-            applicants: 32,
-            status: "Active",
-            postedDate: "12 Jun 2026"
-        },
-        {
-            id: 2,
-            title: "Backend Developer",
-            location: "Bangalore",
-            type: "Full Time",
-            salary: "₹10 LPA",
-            applicants: 18,
-            status: "Closed",
-            postedDate: "08 Jun 2026"
-        },
-        {
-            id: 3,
-            title: "UI/UX Designer",
-            location: "Remote",
-            type: "Contract",
-            salary: "₹6 LPA",
-            applicants: 24,
-            status: "Draft",
-            postedDate: "05 Jun 2026"
-        }
-    ];
+    const [jobs, setJobs] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const { user } = useUserStore();
 
     const totalJobs = jobs.length;
 
@@ -58,10 +33,75 @@ const ManageJobs = () => {
 
     const filteredJobs = jobs.filter(
         (job) =>
-            job.title
+            job.role
                 .toLowerCase()
                 .includes(search.toLowerCase())
     );
+
+    useEffect(() => {
+        if (user?.id) {
+            fetchJobs();
+        }
+    }, [user]);
+
+    const fetchJobs = async () => {
+        try {
+
+            const data = await getRecruiterJobs(
+                user.id
+            );
+
+            setJobs(data.jobs || []);
+
+        } catch (error) {
+
+            console.error(error);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+    };
+
+    if (loading) {
+        return <h2>Loading jobs...</h2>;
+    }
+
+    const handleCloseJob = async (jobId) => {
+        try {
+          await closeJob(jobId);
+      
+          setJobs((prevJobs) =>
+            prevJobs.map((job) =>
+              job.id === jobId
+                ? { ...job, status: "Closed" }
+                : job
+            )
+          );
+      
+          toast.success("Job Closed");
+      
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed To Close Job");
+        }
+      };
+
+    const handleDeleteJob = async (jobId) => {
+        try {
+          await deleteJob(jobId);
+      
+          setJobs((prevJobs) =>
+            prevJobs.filter((job) => job.id !== jobId)
+          );
+      
+          toast.success("Job Deleted");
+      
+        } catch (error) {
+          toast.error("Failed To Delete Job");
+        }
+      };
 
     return (
         <div className="manage-jobs-page">
@@ -180,17 +220,17 @@ const ManageJobs = () => {
                                 className="job-manage-card"
                             >
 
-                                <h3>{job.title}</h3>
+                                <h3>{job.role}</h3>
 
                                 <p className="job-meta">
-                                    {job.location} • {job.type} • {job.salary}
+                                    {job.location_job} • {job.job_type} • {job.salary}
                                 </p>
 
                                 <div className="job-details">
 
                                     <p>
                                         <strong>Posted:</strong>{" "}
-                                        {job.postedDate}
+                                        {new Date(job.created_at).toLocaleDateString()}
                                     </p>
 
                                     <p className="applicant-count">
@@ -231,15 +271,15 @@ const ManageJobs = () => {
 
                                     <button
                                         className="secondary-btn"
-                                        disabled={
-                                            job.status === "Closed"
-                                        }
+                                        disabled={job.status === "Closed"}
+                                        onClick={() => handleCloseJob(job.id)}
                                     >
                                         Close Job
                                     </button>
 
                                     <button
                                         className="danger-btn"
+                                        onClick={() => handleDeleteJob(job.id)}
                                     >
                                         Delete
                                     </button>

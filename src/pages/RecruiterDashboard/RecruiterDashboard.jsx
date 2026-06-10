@@ -1,324 +1,339 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./RecruiterDashboard.css";
+import useUserStore from "../../store/userStore";
+import { getRecruiterDashboard } from "../../api/dashboardApi";
+import { useNavigate } from "react-router-dom";
 
 const RecruiterDashboard = () => {
-    const [search, setSearch] = useState("");
-
-    const recentJobs = [
-        {
-            id: 1,
-            title: "Frontend Developer",
-            location: "Delhi",
-            type: "Full Time",
-            salary: "₹8 LPA",
-            applicants: 32,
-            status: "Active"
-        },
-        {
-            id: 2,
-            title: "Backend Developer",
-            location: "Bangalore",
-            type: "Full Time",
-            salary: "₹10 LPA",
-            applicants: 18,
-            status: "Active"
-        }
-    ];
-
-    const applications = [
-        {
-            id: 1,
-            name: "Rahul Sharma",
-            role: "Frontend Developer",
-            applied: "2 days ago"
-        },
-        {
-            id: 2,
-            name: "Priya Singh",
-            role: "UI/UX Designer",
-            applied: "Yesterday"
-        },
-        {
-            id: 3,
-            name: "Aman Verma",
-            role: "Backend Developer",
-            applied: "3 days ago"
-        }
-    ];
-
-    const filteredJobs = recentJobs.filter(
-        (job) =>
-          job.title
-            .toLowerCase()
-            .includes(search.toLowerCase())
-      );
-
-    return (
-        <div className="recruiter-dashboard">
-
-            {/* HERO */}
-
-            <section className="dashboard-hero">
-
-                <h1>Recruiter Dashboard</h1>
-
-                <p>
-                    Manage jobs and applications from one place.
-                </p>
-
-                <div className="hero-actions">
-
-                    <button className="primary-btn">
-                        + Post New Job
-                    </button>
-
-                    <button className="secondary-btn">
-                        Manage Jobs
-                    </button>
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
-                    <button className="secondary-btn">
-                        View Applicants
-                    </button>
+  const user = useUserStore((state) => state.user);
 
-                </div>
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const stats =
+    dashboardData?.stats || {};
 
-            </section>
+  const recentJobs =
+    dashboardData?.jobs || [];
 
-            <div className="dashboard-container">
+  const applications =
+    dashboardData?.recentApplications || [];
 
-                {/* STATS */}
+  const filteredJobs = recentJobs.filter(
+    (job) =>
+      (job.role || "")
+        .toLowerCase()
+        .includes(search.toLowerCase())
+  );
 
-                <section className="stats-grid">
+  useEffect(() => {
 
-                    <div className="stat-card">
-                        <h2>12</h2>
-                        <p>Jobs Posted</p>
-                    </div>
+    const fetchDashboard = async () => {
 
-                    <div className="stat-card">
-                        <h2>8</h2>
-                        <p>Active Jobs</p>
-                    </div>
+      try {
 
-                    <div className="stat-card">
-                        <h2>156</h2>
-                        <p>Applicants</p>
-                    </div>
+        const data =
+          await getRecruiterDashboard(user.id);
 
-                    <div className="stat-card">
-                        <h2>4</h2>
-                        <p>Closed Jobs</p>
-                    </div>
+        setDashboardData(data);
 
-                </section>
+      } catch (error) {
 
-                {/* PIPELINE */}
+        console.log(error);
 
-                <section className="dashboard-section">
+      } finally {
 
-                    <h2>Applicant Overview</h2>
+        setLoading(false);
 
-                    <div className="pipeline-grid">
+      }
+    };
 
-                        <div className="pipeline-card pending">
-                            <h3>12</h3>
-                            <p>Pending</p>
-                        </div>
+    if (user) {
+      fetchDashboard();
+    }
 
-                        <div className="pipeline-card reviewed">
-                            <h3>8</h3>
-                            <p>Reviewed</p>
-                        </div>
+  }, [user]);
 
-                        <div className="pipeline-card accepted">
-                            <h3>2</h3>
-                            <p>Accepted</p>
-                        </div>
+  if (loading) {
+    return <h2>Loading Dashboard...</h2>;
+  }
 
-                        <div className="pipeline-card rejected">
-                            <h3>4</h3>
-                            <p>Rejected</p>
-                        </div>
+  if (!dashboardData) {
+    return <h2>Dashboard Not Found</h2>;
+  }
+  const pipeline =
+    dashboardData?.pipeline || {};
 
-                    </div>
+  return (
+    <div className="recruiter-dashboard">
 
-                </section>
+      {/* HERO */}
 
-                {/* ACTIVITY */}
+      <section className="dashboard-hero">
 
-                <section className="dashboard-section">
+        <h1>Recruiter Dashboard</h1>
 
-                    <h2>Recent Activity</h2>
+        <p>
+          Manage jobs and applications from one place.
+        </p>
 
-                    <div className="activity-feed">
+        <div className="hero-actions">
 
-                        <div className="activity-item">
-                            ✓ Rahul Sharma applied for Frontend Developer
-                        </div>
+          <button
+            className="primary-btn"
+            onClick={() => navigate("/recruiterpost")}
+          >
+            + Post New Job
+          </button>
 
-                        <div className="activity-item">
-                            ✓ Priya Singh shortlisted for UI/UX Designer
-                        </div>
+          <button
+            className="secondary-btn"
+            onClick={() => navigate("/manage-jobs")}
+          >
+            Manage Jobs
+          </button>
 
-                        <div className="activity-item">
-                            ✓ Backend Developer job updated
-                        </div>
-
-                        <div className="activity-item">
-                            ✓ New applicant received
-                        </div>
-
-                    </div>
-
-                </section>
-
-                {/* RECENT JOBS */}
-
-                <section className="dashboard-section">
-
-                    <div className="section-header">
-
-                        <h2>Recent Jobs</h2>
-
-                        <button className="secondary-btn">
-                            View All
-                        </button>
-
-                    </div>
-
-                    {
-  filteredJobs.length === 0 ? (
-
-    <div className="empty-state">
-
-      <h3>No Jobs Posted Yet</h3>
-
-      <p>
-        Post your first job to start receiving applications.
-      </p>
-
-      <button className="primary-btn">
-        Post Job
-      </button>
-
-    </div>
-
-  ) : (
-
-    <div className="jobs-grid">
-
-      {filteredJobs.map((job) => (
-
-        <div
-          key={job.id}
-          className="job-card"
-        >
-
-          <div className="job-top">
-
-            <div>
-
-              <h3>{job.title}</h3>
-
-              <p>
-                {job.type} • {job.location}
-              </p>
-
-            </div>
-
-            <span
-              className={`status-badge ${job.status.toLowerCase()}`}
-            >
-              {job.status}
-            </span>
-
-          </div>
-
-          <h4>{job.salary}</h4>
-
-          <p>
-            {job.applicants} Applicants
-          </p>
-
-          <div className="job-actions">
-
-            <button className="primary-btn">
-              View Applicants
-            </button>
-
-            <button className="secondary-btn">
-              Edit Job
-            </button>
-
-          </div>
-
-        </div>
-
-      ))}
-
-    </div>
-
-  )
-}
-
-                </section>
-
-                {/* RECENT APPLICATIONS */}
-
-                <section className="dashboard-section">
-
-                    <h2>Recent Applications</h2>
-
-                    {
-  applications.length === 0 ? (
-
-    <div className="empty-state">
-
-      <h3>No Applications Yet</h3>
-
-      <p>
-        Applications will appear here once candidates apply.
-      </p>
-
-    </div>
-
-  ) : (
-
-    <div className="applications-grid">
-
-      {applications.map((app) => (
-
-        <div
-          key={app.id}
-          className="application-card"
-        >
-
-          <h3>{app.name}</h3>
-
-          <p>Applied For</p>
-
-          <strong>{app.role}</strong>
-
-          <span>{app.applied}</span>
-
-          <button className="primary-btn">
-            View Profile
+          <button
+            className="secondary-btn"
+            onClick={() => navigate("/view-applicants")}
+          >
+            View Applicants
           </button>
 
         </div>
 
-      ))}
+      </section>
 
-    </div>
+      <div className="dashboard-container">
 
-  )
-}
+        {/* STATS */}
 
-                </section>
+        <section className="stats-grid">
 
-                {/* JOB TABLE */}
+          <div className="stat-card">
+            <h2>{stats.jobsPosted || 0}</h2>
+            <p>Jobs Posted</p>
+          </div>
 
-                <section className="dashboard-section">
+          <div className="stat-card">
+            <h2>{stats.activeJobs || 0}</h2>
+            <p>Active Jobs</p>
+          </div>
+
+          <div className="stat-card">
+            <h2>{stats.applicants || 0}</h2>
+            <p>Applicants</p>
+          </div>
+
+          <div className="stat-card">
+            <h2>{stats.closedJobs || 0}</h2>
+            <p>Closed Jobs</p>
+          </div>
+
+        </section>
+
+        {/* PIPELINE */}
+
+        <section className="dashboard-section">
+
+          <h2>Applicant Overview</h2>
+
+          <div className="pipeline-grid">
+
+            <div className="pipeline-card pending">
+              <h3>{pipeline.pending || 0}</h3>
+              <p>Pending</p>
+            </div>
+
+            <div className="pipeline-card reviewed">
+              <h3>{pipeline.reviewed || 0}</h3>
+              <p>Reviewed</p>
+            </div>
+
+            <div className="pipeline-card accepted">
+              <h3>{pipeline.accepted || 0}</h3>
+              <p>Accepted</p>
+            </div>
+
+            <div className="pipeline-card rejected">
+              <h3>{pipeline.rejected || 0}</h3>
+              <p>Rejected</p>
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* ACTIVITY */}
+
+        <section className="dashboard-section">
+
+          <h2>Recent Activity</h2>
+
+          <div className="empty-state">
+
+            <h3>No Recent Activity</h3>
+
+            <p>
+              Activity will appear here once jobs and applications start coming in.
+            </p>
+
+          </div>
+
+        </section>
+
+        {/* RECENT JOBS */}
+
+        <section className="dashboard-section">
+
+          <div className="section-header">
+
+            <h2>Recent Jobs</h2>
+
+            <button className="secondary-btn">
+              View All
+            </button>
+
+          </div>
+
+          {
+            filteredJobs.length === 0 ? (
+
+              <div className="empty-state">
+
+                <h3>No Jobs Posted Yet</h3>
+
+                <p>
+                  Post your first job to start receiving applications.
+                </p>
+
+                <button
+                  className="primary-btn"
+                  onClick={() => navigate("/recruiterpost")}
+                >
+                  Post Job
+                </button>
+
+              </div>
+
+            ) : (
+
+              <div className="jobs-grid">
+
+                {filteredJobs.map((job) => (
+
+                  <div
+                    key={job.id}
+                    className="job-card"
+                  >
+
+                    <div className="job-top">
+
+                      <div>
+
+                        <h3>{job.role}</h3>
+
+                        <p>
+                          {job.job_type} • {job.location_job}
+                        </p>
+
+                      </div>
+
+                      <span
+                        className={`status-badge ${(job.status || "").toLowerCase()}`}
+                      >
+                        {job.status}
+                      </span>
+
+                    </div>
+
+                    <h4>{job.salary}</h4>
+
+                    <p>
+                      Applicants
+                    </p>
+
+                    <div className="job-actions">
+
+                      <button className="primary-btn">
+                        View Applicants
+                      </button>
+
+                      <button className="secondary-btn">
+                        Edit Job
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                ))}
+
+              </div>
+
+            )
+          }
+
+        </section>
+
+        {/* RECENT APPLICATIONS */}
+
+        <section className="dashboard-section">
+
+          <h2>Recent Applications</h2>
+
+          {
+            applications.length === 0 ? (
+
+              <div className="empty-state">
+
+                <h3>No Applications Yet</h3>
+
+                <p>
+                  Applications will appear here once candidates apply.
+                </p>
+
+              </div>
+
+            ) : (
+
+              <div className="applications-grid">
+
+                {applications.map((app) => (
+
+                  <div
+                    key={app.id}
+                    className="application-card"
+                  >
+
+                    <h3>{app.student_name}</h3>
+
+                    <p>Applied For</p>
+
+                    <strong>{app.job_role}</strong>
+
+                    <span>{app.status}</span>
+
+                    <button className="primary-btn">
+                      View Profile
+                    </button>
+
+                  </div>
+
+                ))}
+
+              </div>
+
+            )
+          }
+
+        </section>
+
+        {/* JOB TABLE */}
+
+        {/* <section className="dashboard-section">
 
                     <div className="section-header">
 
@@ -356,9 +371,9 @@ const RecruiterDashboard = () => {
 
                                 </tr>
 
-                            </thead>
+                            </thead> */}
 
-                            <tbody>
+        {/* <tbody>
 
                                 <tr>
 
@@ -424,24 +439,18 @@ const RecruiterDashboard = () => {
 
                                 </tr>
 
-                            </tbody>
+                            </tbody> */}
 
-                        </table>
+        {/* </table>
 
                     </div>
 
-                </section>
+                </section> */}
 
-            </div>
+      </div>
 
-        </div>
-    );
+    </div>
+  );
 };
 
 export default RecruiterDashboard;
-
-// const RecruiterDashboard = () => {
-//     return <h1>Recruiter Dashboard Works</h1>;
-//   };
-  
-//   export default RecruiterDashboard;

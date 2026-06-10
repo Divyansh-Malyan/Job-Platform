@@ -36,7 +36,7 @@ const App = () => {
 
   useEffect(() => {
     initializeUser();
-  }, [initializeUser]);
+  }, []);
 
   return (
 
@@ -57,7 +57,7 @@ const App = () => {
             <Route path='/jobs' element={<JobsPage />} />
             <Route path='/contact' element={<Contact />} />
             <Route path='/recruiterpost' element={<RecruiterPost />} />
-            <Route path='//jobdetail/:id' element={<JobDetail />} />
+            <Route path='/jobdetail/:id' element={<JobDetail />} />
             <Route path="/edit-profile" element={<EditProfile />} />
             <Route path="/myapplications" element={<MyApplications />} />
             <Route path="/recruiterdashboard" element={<RecruiterDashboard />} />

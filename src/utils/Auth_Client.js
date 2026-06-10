@@ -1,57 +1,165 @@
-import supabase from "./supabase_client"
+import supabase from "./supabase_client";
 
 const login = async (email, password) => {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
-  })
+  });
+
   if (error) {
-    return { success: false, message: error.message }
+    return { success: false, message: error.message };
   }
 
-  return { success: true, user: data.user }
-}
+  return { success: true, user: data.user };
+};
 
-const signup = async (name, email, password, role, companyName) => {
+const signup = async (
+  name,
+  email,
+  password,
+  role,
+  companyName
+) => {
+
   const { data, error } = await supabase.auth.signUp({
-    email: email,
-    password: password,
-  })
+    email,
+    password,
+  });
 
   if (error) {
-    return { success: false, message: error.message }
+    return {
+      success: false,
+      message: error.message,
+    };
   }
 
-  const user = data.user
+  const user = data.user;
 
   if (!user) {
-    return { success: false, message: "Signup failed" };
+    return {
+      success: false,
+      message: "Signup failed",
+    };
   }
 
-  console.log(data)
-  const { error: dberror } = await supabase.from("User").insert([
-    {
-      user_id: user.id,
-      // name: name,
-      email: email,
-      role: role,
-    }
-  ])
-  if (dberror) {
-    console.log("DB Error:", dberror);
-    return { success: false, message: dberror.message }
+  // ---------------- USER TABLE ----------------
+
+  const { error: userError } = await supabase
+    .from("User")
+    .insert([
+      {
+        user_id: user.id,
+        email,
+        role,
+      },
+    ]);
+
+  if (userError) {
+    console.log("User Table Error:", userError);
+
+    return {
+      success: false,
+      message: userError.message,
+    };
   }
-  return { success: true, user: data.user }
-}
+
+  // ---------------- STUDENT SIGNUP ----------------
+
+  if (role === "candidate") {
+
+    const { error: studentError } = await supabase
+      .from("Students")
+      .insert([
+        {
+          user_student_id: user.id,
+          name,
+        },
+      ]);
+
+    if (studentError) {
+      console.log("Student Error:", studentError);
+
+      return {
+        success: false,
+        message: studentError.message,
+      };
+    }
+  }
+
+  // ---------------- RECRUITER SIGNUP ----------------
+
+  if (role === "recruiter") {
+
+    // Create Company
+
+    const {
+      data: company,
+      error: companyError,
+    } = await supabase
+      .from("Company")
+      .insert([
+        {
+          company_name: companyName,
+        },
+      ])
+      .select()
+      .single();
+
+    if (companyError) {
+      console.log("Company Error:", companyError);
+
+      return {
+        success: false,
+        message: companyError.message,
+      };
+    }
+
+    // Create Recruiter
+
+    const { error: recruiterError } = await supabase
+      .from("Recruiters")
+      .insert([
+        {
+          id: user.id,
+          name,
+          company_id: company.comp_id,
+        },
+      ]);
+
+    if (recruiterError) {
+      console.log("Recruiter Error:", recruiterError);
+
+      return {
+        success: false,
+        message: recruiterError.message,
+      };
+    }
+  }
+
+  return {
+    success: true,
+    user,
+  };
+};
 
 const logout = async () => {
-  const { error } = await supabase.auth.signOut()
+
+  const { error } = await supabase.auth.signOut();
 
   if (error) {
-    return { success: false, message: error.message }
+    return {
+      success: false,
+      message: error.message,
+    };
   }
 
-  return { success: true }
-}
+  return {
+    success: true,
+  };
+};
 
-export { login, signup, logout }
+export {
+  login,
+  signup,
+  logout,
+};

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './LoginPage.css';
 import google from '../../assets/google.svg';
 import github from '../../assets/github.svg';
-import { Link , useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../utils/Auth_Client'
 import toast from 'react-hot-toast';
 import useUserStore from "../../store/userStore";
@@ -31,7 +31,13 @@ const LoginPage = () => {
         } else {
             toast.success("Login successful 🚀");
             await initializeUser();   // refresh Zustand store
-            navigate("/");
+            const profile = useUserStore.getState().profile;
+
+            if (profile?.role === "recruiter") {
+                navigate("/recruiterdashboard");
+            } else {
+                navigate("/student/profile");
+            }
         }
     }
 
@@ -40,8 +46,8 @@ const LoginPage = () => {
 
 
             <form
-            onSubmit={handleSubmit}
-            className='left-side-form'>
+                onSubmit={handleSubmit}
+                className='left-side-form'>
                 <h2>Log In</h2>
 
                 <input

@@ -1,7 +1,122 @@
-import React from "react";
+import React, { useState } from "react";
 import "./RecruiterPost.css";
+import { createJob } from "../../api/jobApi";
+import toast from "react-hot-toast";
+import useUserStore from "../../store/userStore";
+import { useNavigate } from "react-router-dom";
+import { getRecruiterJobs } from "../../api/jobApi";
+import { useEffect } from "react";
 
 const RecruiterPost = () => {
+  const initialFormData = {
+    role: "",
+    description_job: "",
+    location_job: "",
+    exp_required: "",
+    salary: "",
+    deadline: "",
+    job_type: "Full Time",
+    skills_required: "",
+    work_mode: "Remote",
+    openings: 1,
+  };
+  const [companyInfo, setCompanyInfo] = useState({
+    company_name: "",
+    website: "",
+  });
+
+
+  const [formData, setFormData] =
+    useState(initialFormData);
+
+  const { user } = useUserStore();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+
+      await createJob({
+        recruiterId: user.id,
+        ...formData,
+        status: "Active",
+      });
+
+      toast.success(
+        "Job Posted Successfully"
+      );
+
+      setFormData(initialFormData);
+
+      navigate("/manage-jobs");
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error(
+        "Failed To Post Job"
+      );
+
+    }
+  };
+
+
+  const handleDraft = async () => {
+    try {
+
+      await createJob({
+        recruiterId: user.id,
+        ...formData,
+        status: "Draft",
+      });
+
+      toast.success("Draft Saved");
+
+      setFormData(initialFormData);
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error(
+        "Failed To Save Draft"
+      );
+
+    }
+  };
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchCompanyInfo();
+    }
+  }, [user]);
+
+  const fetchCompanyInfo = async () => {
+    try {
+      const data = await getRecruiterJobs(user.id);
+
+      if (data.jobs.length > 0) {
+        setCompanyInfo({
+          company_name: data.jobs[0].company_name || "",
+          website: data.jobs[0].website || "",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+
   return (
     <div className="post-job-page">
 
@@ -25,7 +140,31 @@ const RecruiterPost = () => {
 
           <h2>Create New Job Opening</h2>
 
-          <form>
+          <form onSubmit={handleSubmit}>
+
+            <div className="form-row">
+
+              <div className="input-group">
+                <label>Company Name</label>
+
+                <input
+                  type="text"
+                  value={companyInfo.company_name}
+                  readOnly
+                />
+              </div>
+
+              <div className="input-group">
+                <label>Company Website</label>
+
+                <input
+                  type="text"
+                  value={companyInfo.website}
+                  readOnly
+                />
+              </div>
+
+            </div>
 
             {/* Row 1 */}
 
@@ -37,18 +176,10 @@ const RecruiterPost = () => {
 
                 <input
                   type="text"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
                   placeholder="Frontend Developer"
-                />
-
-              </div>
-
-              <div className="input-group">
-
-                <label>Company Name</label>
-
-                <input
-                  type="text"
-                  placeholder="Hustler Inc."
                 />
 
               </div>
@@ -65,6 +196,9 @@ const RecruiterPost = () => {
 
                 <input
                   type="text"
+                  name="location_job"
+                  value={formData.location_job}
+                  onChange={handleChange}
                   placeholder="Remote / Delhi / Bangalore"
                 />
 
@@ -74,22 +208,37 @@ const RecruiterPost = () => {
 
                 <label>Job Type</label>
 
-                <select>
+                <select
+                  name="job_type"
+                  value={formData.job_type}
+                  onChange={handleChange}
+                >
 
                   <option>Full Time</option>
 
+                  <option>Part Time</option>
+
                   <option>Internship</option>
 
-                  <option>Part Time</option>
+                  <option>Contract</option>
 
                   <option>Freelance</option>
 
-                  <option>Remote</option>
-
-                  <option>Hybrid</option>
-
                 </select>
 
+              </div>
+              <div className="input-group">
+                <label>Work Mode</label>
+
+                <select
+                  name="work_mode"
+                  value={formData.work_mode}
+                  onChange={handleChange}
+                >
+                  <option>Remote</option>
+                  <option>Hybrid</option>
+                  <option>On Site</option>
+                </select>
               </div>
 
             </div>
@@ -104,6 +253,9 @@ const RecruiterPost = () => {
 
                 <input
                   type="text"
+                  name="salary"
+                  value={formData.salary}
+                  onChange={handleChange}
                   placeholder="₹20,000 - ₹50,000"
                 />
 
@@ -113,7 +265,11 @@ const RecruiterPost = () => {
 
                 <label>Experience Level</label>
 
-                <select>
+                <select
+                  name="exp_required"
+                  value={formData.exp_required}
+                  onChange={handleChange}
+                >
 
                   <option>Fresher</option>
 
@@ -141,24 +297,11 @@ const RecruiterPost = () => {
 
                 <input
                   type="number"
+                  name="openings"
+                  value={formData.openings}
+                  onChange={handleChange}
                   placeholder="5"
                 />
-
-              </div>
-
-              <div className="input-group">
-
-                <label>Job Status</label>
-
-                <select>
-
-                  <option>Active</option>
-
-                  <option>Draft</option>
-
-                  <option>Closed</option>
-
-                </select>
 
               </div>
 
@@ -172,20 +315,10 @@ const RecruiterPost = () => {
 
               <textarea
                 rows="8"
-                placeholder="Describe the role, responsibilities, and expectations..."
-              ></textarea>
-
-            </div>
-
-            {/* Responsibilities */}
-
-            <div className="input-group">
-
-              <label>Responsibilities</label>
-
-              <textarea
-                rows="6"
-                placeholder="List key responsibilities..."
+                name="description_job"
+                value={formData.description_job}
+                onChange={handleChange}
+                placeholder="Describe the role..."
               ></textarea>
 
             </div>
@@ -198,6 +331,9 @@ const RecruiterPost = () => {
 
               <input
                 type="text"
+                name="skills_required"
+                value={formData.skills_required}
+                onChange={handleChange}
                 placeholder="React, Node.js, MongoDB"
               />
 
@@ -209,7 +345,12 @@ const RecruiterPost = () => {
 
               <label>Application Deadline</label>
 
-              <input type="date" />
+              <input
+                type="date"
+                name="deadline"
+                value={formData.deadline}
+                onChange={handleChange}
+              />
 
             </div>
 
@@ -220,6 +361,7 @@ const RecruiterPost = () => {
               <button
                 type="button"
                 className="draft-btn"
+                onClick={handleDraft}
               >
                 Save Draft
               </button>

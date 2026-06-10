@@ -1,26 +1,28 @@
 import React, { useState } from "react";
 import "./EditJob.css";
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { getJobById, updateJob, closeJob, deleteJob } from "../../api/jobApi";
+import toast from "react-hot-toast";
+
 
 const EditJob = () => {
 
+    const { id } = useParams();
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
-        title: "Frontend Developer",
-        company: "Google",
-        website: "https://google.com",
-        location: "Delhi",
-        type: "Full Time",
-        workMode: "Remote",
-        salary: "₹8 LPA",
-        experience: "1-3 Years",
-        openings: 3,
-        applicants: 32,
-        description:
-            "We are looking for a React developer to build modern user interfaces and collaborate with our engineering team.",
-        skills: "React, Node.js, MongoDB",
-        responsibilities:
-            "Build frontend components\nCollaborate with backend team\nWrite clean code",
-        deadline: "2026-06-30",
-        status: "Active"
+        role: "",
+        location_job: "",
+        job_type: "Full Time",
+        work_mode: "Remote",
+        salary: "",
+        exp_required: "",
+        openings: 1,
+        description_job: "",
+        skills_required: "",
+        deadline: "",
+        status: "Draft"
     });
 
     const handleChange = (e) => {
@@ -30,10 +32,105 @@ const EditJob = () => {
         });
     };
 
-    const handleSave = () => {
-        console.log(formData);
+    const handleSave = async () => {
+        try {
 
-        // API Call Later
+            await updateJob(id, formData);
+
+            toast.success(
+                "Job Updated Successfully"
+            );
+
+            navigate("/manage-jobs");
+
+        } catch (error) {
+
+            console.error(error);
+
+            toast.error(
+                "Failed To Update Job"
+            );
+
+        }
+    };
+
+    useEffect(() => {
+        fetchJob();
+    }, []);
+
+    const fetchJob = async () => {
+        try {
+
+            const data = await getJobById(id);
+
+            const job = data.job;
+
+            setFormData({
+                role: job.role || "",
+                location_job: job.location_job || "",
+                job_type: job.job_type || "",
+                work_mode: job.work_mode || "",
+                salary: job.salary || "",
+                exp_required: job.exp_required || "",
+                openings: job.openings || 1,
+                description_job:
+                    job.description_job || "",
+                skills_required:
+                    job.skills_required || "",
+                deadline:
+                    job.deadline
+                        ?.split("T")[0] || "",
+                status: job.status || "Draft",
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+    };
+
+    const handleCloseJob = async () => {
+        try {
+
+            await closeJob(id);
+
+            toast.success("Job Closed");
+
+            navigate("/manage-jobs");
+
+        } catch (error) {
+
+            console.error(error);
+
+            toast.error("Failed To Close Job");
+
+        }
+    };
+
+    const handleDeleteJob = async () => {
+
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this job?"
+        );
+
+        if (!confirmDelete) return;
+
+        try {
+
+            await deleteJob(id);
+
+            toast.success("Job Deleted");
+
+            navigate("/manage-jobs");
+
+        } catch (error) {
+
+            console.error(error);
+
+            toast.error("Failed To Delete Job");
+
+        }
     };
 
     return (
@@ -73,38 +170,13 @@ const EditJob = () => {
 
                             <input
                                 type="text"
-                                name="title"
-                                value={formData.title}
+                                name="role"
+                                value={formData.role}
                                 onChange={handleChange}
                             />
 
                         </div>
 
-                        <div className="input-group">
-
-                            <label>Company Name</label>
-
-                            <input
-                                type="text"
-                                name="company"
-                                value={formData.company}
-                                onChange={handleChange}
-                            />
-
-                        </div>
-
-                        <div className="input-group">
-
-                            <label>Company Website</label>
-
-                            <input
-                                type="url"
-                                name="website"
-                                value={formData.website}
-                                onChange={handleChange}
-                            />
-
-                        </div>
 
                         <div className="input-group">
 
@@ -112,8 +184,8 @@ const EditJob = () => {
 
                             <input
                                 type="text"
-                                name="location"
-                                value={formData.location}
+                                name="location_job"
+                                value={formData.location_job}
                                 onChange={handleChange}
                             />
 
@@ -124,8 +196,8 @@ const EditJob = () => {
                             <label>Job Type</label>
 
                             <select
-                                name="type"
-                                value={formData.type}
+                                name="job_type"
+                                value={formData.job_type}
                                 onChange={handleChange}
                             >
                                 <option>Full Time</option>
@@ -142,8 +214,8 @@ const EditJob = () => {
                             <label>Work Mode</label>
 
                             <select
-                                name="workMode"
-                                value={formData.workMode}
+                                name="work_mode"
+                                value={formData.work_mode}
                                 onChange={handleChange}
                             >
                                 <option>Remote</option>
@@ -171,8 +243,8 @@ const EditJob = () => {
                             <label>Experience Required</label>
 
                             <select
-                                name="experience"
-                                value={formData.experience}
+                                name="exp_required"
+                                value={formData.exp_required}
                                 onChange={handleChange}
                             >
                                 <option>Fresher</option>
@@ -206,8 +278,8 @@ const EditJob = () => {
 
                         <textarea
                             rows="6"
-                            name="description"
-                            value={formData.description}
+                            name="description_job"
+                            value={formData.description_job}
                             onChange={handleChange}
                         />
 
@@ -219,22 +291,9 @@ const EditJob = () => {
 
                         <input
                             type="text"
-                            name="skills"
+                            name="skills_required"
                             placeholder="React, Node.js, MongoDB"
-                            value={formData.skills}
-                            onChange={handleChange}
-                        />
-
-                    </div>
-
-                    <div className="input-group">
-
-                        <label>Responsibilities</label>
-
-                        <textarea
-                            rows="5"
-                            name="responsibilities"
-                            value={formData.responsibilities}
+                            value={formData.skills_required}
                             onChange={handleChange}
                         />
 
@@ -286,6 +345,7 @@ const EditJob = () => {
                         <button
                             type="button"
                             className="close-btn"
+                            onClick={handleCloseJob}
                         >
                             Close Job
                         </button>
@@ -293,6 +353,7 @@ const EditJob = () => {
                         <button
                             type="button"
                             className="delete-btn"
+                            onClick={handleDeleteJob}
                         >
                             Delete Job
                         </button>
@@ -305,7 +366,7 @@ const EditJob = () => {
 
                 <div className="preview-card">
 
-                    <h3>{formData.title}</h3>
+                    <h3>{formData.role}</h3>
 
                     <p className="company">
                         {formData.company}
@@ -316,23 +377,23 @@ const EditJob = () => {
                     </p>
 
                     <p>
-                        {formData.location}
+                        {formData.location_job}
                         {" • "}
-                        {formData.type}
+                        {formData.job_type}
                         {" • "}
-                        {formData.workMode}
+                        {formData.work_mode}
                     </p>
 
                     <h4>{formData.salary}</h4>
                     <p className="preview-experience">
-                        Experience: {formData.experience}
+                        Experience: {formData.exp_required}
                     </p>
 
                     <span className="status-pill">
                         {formData.status}
                     </span>
                     <p className="preview-description">
-                        {formData.description}
+                        {formData.description_job}
                     </p>
 
                     <div className="preview-info">
