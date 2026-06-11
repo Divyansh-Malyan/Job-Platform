@@ -1,14 +1,149 @@
 import React from "react";
 import "./StudentView.css";
+// import ProfilePic from "../../assets/profile.jpg";
+import {
+    useEffect,
+    useState
+} from "react";
+
+import "./StudentView.css";
+
 import ProfilePic from "../../assets/profile.jpg";
+
+import {
+    useParams
+} from "react-router-dom";
+
+import {
+    getStudentById
+} from "../../api/studentApi";
+import { useLocation } from "react-router-dom";
+import {
+    updateApplicationStatus
+} from "../../api/applicationApi";
+
+
 
 const StudentView = () => {
 
+    const { studentId } = useParams();
+    const location = useLocation();
+
+    const applicationId =
+        location.state?.applicationId;
+    const currentStatus =
+        location.state?.status;
+
+    const [student, setStudent] = useState(null);
+    const [skills, setSkills] = useState([]);
+    const [projects, setProjects] = useState([]);
+    const [experience, setExperience] = useState([]);
+    const [email, setEmail] = useState("");
+
+    const [loading, setLoading] =
+        useState(true);
+
+    useEffect(() => {
+
+        fetchStudent();
+
+    }, [studentId]);
+
+    const fetchStudent = async () => {
+
+        try {
+
+            const data =
+                await getStudentById(
+                    studentId
+                );
+
+            setStudent(data.student);
+            setSkills(data.skills || []);
+            setProjects(data.projects || []);
+            setExperience(
+                data.experience || []
+            );
+            setEmail(data.email || "");
+
+        } catch (error) {
+
+            console.error(error);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+    };
+
+    if (loading) {
+        return <h2>Loading...</h2>;
+    }
+
+    if (!student) {
+        return <h2>Student Not Found</h2>;
+    }
+
+    const handleAccept = async () => {
+
+        try {
+
+            await updateApplicationStatus(
+                applicationId,
+                "Accepted"
+            );
+
+            alert("Application Accepted");
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    };
+
+    const handleReject = async () => {
+
+        try {
+
+            await updateApplicationStatus(
+                applicationId,
+                "Rejected"
+            );
+
+            alert("Application Rejected");
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    };
+
+    const handleShortlist = async () => {
+
+        try {
+
+            await updateApplicationStatus(
+                applicationId,
+                "Shortlisted"
+            );
+
+            alert("Application Shortlisted");
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    };
+
     return (
         <div className="student-view-page">
-
-            {/* HERO */}
-
             <section className="student-view-hero">
 
                 <img
@@ -17,50 +152,91 @@ const StudentView = () => {
                     className="student-view-image"
                 />
 
-                <h1>Rahul Sharma</h1>
+                <h1>{student.name}</h1>
 
-                <h3>Frontend Developer</h3>
+                <h3>
+                    {student.headline || "No Headline"}
+                </h3>
 
-                <p>📍 Delhi, India</p>
+                <p>
+                    📍 {student.city || "N/A"},
+                    {" "}
+                    {student.country || "N/A"}
+                </p>
 
-                <span className="open-to-work-badge">
-                    Open To Work
-                </span>
-
+                {
+                    student.open_to_work && (
+                        <span className="open-to-work-badge">
+                            Open To Work
+                        </span>
+                    )
+                }
                 <div className="recruiter-actions">
 
-                    <button className="download-btn">
-                        Download Resume
-                    </button>
+                    {
+                        student.resume_url ? (
 
-                    <button className="accept-btn">
-                        Accept
-                    </button>
+                            <a
+                                href={student.resume_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="download-btn"
+                            >
+                                Download Resume
+                            </a>
 
-                    <button className="shortlist-btn">
-                        Shortlist
-                    </button>
+                        ) : (
 
-                    <button className="reject-btn">
-                        Reject
-                    </button>
+                            <button
+                                className="download-btn"
+                                disabled
+                            >
+                                No Resume
+                            </button>
+
+                        )
+                    }
+
+                    {
+                        currentStatus?.toLowerCase() === "pending" && (
+                            <>
+                                <button
+                                    className="accept-btn"
+                                    onClick={() =>
+                                        handleAccept(applicationId)
+                                    }
+                                >
+                                    Accept
+                                </button>
+
+                                <button
+                                    className="shortlist-btn"
+                                    onClick={() =>
+                                        handleShortlist(applicationId)
+                                    }
+                                >
+                                    Shortlist
+                                </button>
+
+                                <button
+                                    className="reject-btn"
+                                    onClick={() =>
+                                        handleReject(applicationId)
+                                    }
+                                >
+                                    Reject
+                                </button>
+                            </>
+                        )
+                    }
+
                 </div>
-                <div className="candidate-status">
-
-                    <h4>Application Status</h4>
-
-                    <span className="status-badge">
-                        Pending Review
-                    </span>
-
-                    <p className="applied-date">
-                        Applied on 12 June 2026
-                    </p>
-
-                </div>
-
 
             </section>
+
+            {/* HERO */}
+
+
 
             <div className="student-view-container">
 
@@ -71,13 +247,7 @@ const StudentView = () => {
                     <h2>About</h2>
 
                     <p>
-                        Passionate Frontend Developer with strong experience
-                        building responsive and scalable web applications
-                        using React, JavaScript and modern frontend tools.
-
-                        Interested in creating user-centric products,
-                        collaborating with teams and solving real-world
-                        problems through technology.
+                        {student.about || "No About Information Added"}
                     </p>
 
                 </section>
@@ -88,45 +258,46 @@ const StudentView = () => {
 
                     <h2>Experience</h2>
 
-                    <div className="experience-card">
+                    {
+                        experience.length === 0 ? (
 
-                        <div className="experience-top">
+                            <p>No Experience Added</p>
 
-                            <div>
+                        ) : (
 
-                                <h3>
-                                    Frontend Developer Intern
-                                </h3>
+                            experience.map((exp) => (
 
-                                <p>
-                                    Google
-                                </p>
+                                <div
+                                    key={exp.id}
+                                    className="experience-card"
+                                >
 
-                            </div>
+                                    <div className="experience-top">
 
-                            <span>
-                                May 2025 - Jul 2025
-                            </span>
+                                        <div>
 
-                        </div>
+                                            <h3>{exp.role}</h3>
 
-                        <ul>
+                                            <p>{exp.company_name}</p>
 
-                            <li>
-                                Built responsive React interfaces.
-                            </li>
+                                        </div>
 
-                            <li>
-                                Improved application performance.
-                            </li>
+                                        <span>
+                                            {exp.start_date}
+                                            {" - "}
+                                            {exp.end_date || "Present"}
+                                        </span>
 
-                            <li>
-                                Integrated REST APIs.
-                            </li>
+                                    </div>
 
-                        </ul>
+                                    <p>{exp.about}</p>
 
-                    </div>
+                                </div>
+
+                            ))
+
+                        )
+                    }
 
                 </section>
 
@@ -136,59 +307,69 @@ const StudentView = () => {
 
                     <h2>Projects</h2>
 
-                    <div className="projects-grid">
+                    {
+                        projects.length === 0 ? (
 
-                        <div className="project-card">
+                            <p>No Projects Added</p>
 
-                            <h3>
-                                Job Platform
-                            </h3>
+                        ) : (
 
-                            <p className="project-tech">
-                                React • Node.js • MongoDB
-                            </p>
+                            <div className="projects-grid">
 
-                            <p>
-                                Full-stack recruitment platform with
-                                dashboards and authentication.
-                            </p>
+                                {
+                                    projects.map((project) => (
 
-                        </div>
+                                        <div
+                                            key={project.id}
+                                            className="project-card"
+                                        >
 
-                        <div className="project-card">
+                                            <h3>
+                                                {project.project_name}
+                                            </h3>
 
-                            <h3>
-                                Portfolio Website
-                            </h3>
+                                            <p>
+                                                {project.description}
+                                            </p>
 
-                            <p className="project-tech">
-                                React • CSS
-                            </p>
+                                            <br />
 
-                            <p>
-                                Personal portfolio showcasing projects
-                                and technical skills.
-                            </p>
+                                            {
+                                                project.github_link && (
+                                                    <a
+                                                        href={project.github_link}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                    >
+                                                        Github
+                                                    </a>
+                                                )
+                                            }
 
-                        </div>
+                                            {
+                                                project.demo_link && (
+                                                    <>
+                                                        {" | "}
+                                                        <a
+                                                            href={project.demo_link}
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                        >
+                                                            Demo
+                                                        </a>
+                                                    </>
+                                                )
+                                            }
 
-                        <div className="project-card">
+                                        </div>
 
-                            <h3>
-                                AI Resume Analyzer
-                            </h3>
+                                    ))
+                                }
 
-                            <p className="project-tech">
-                                MERN • OpenAI
-                            </p>
+                            </div>
 
-                            <p>
-                                Resume screening and analysis platform.
-                            </p>
-
-                        </div>
-
-                    </div>
+                        )
+                    }
 
                 </section>
 
@@ -205,18 +386,14 @@ const StudentView = () => {
                             <div>
 
                                 <h3>
-                                    Bachelor of Technology
+                                    {student.course || "Not Added"}
                                 </h3>
 
                                 <p>
-                                    Computer Science Engineering
+                                    {student.batch || "Not Added"}
                                 </p>
 
                             </div>
-
-                            <span>
-                                2023 - 2027
-                            </span>
 
                         </div>
 
@@ -224,25 +401,21 @@ const StudentView = () => {
 
                             <div>
 
-                                <small>
-                                    University
-                                </small>
+                                <small>College</small>
 
                                 <h4>
-                                    Graphic Era Hill University
-                                </h4>
-
-                                <small>
-                                    CGPA
-                                </small>
-
-                                <h4>
-                                    8.2
+                                    {student.college || "Not Added"}
                                 </h4>
 
                             </div>
 
                             <div>
+
+                                <small>CGPA</small>
+
+                                <h4>
+                                    {student.cgpa || "N/A"}
+                                </h4>
 
                             </div>
 
@@ -258,20 +431,31 @@ const StudentView = () => {
 
                     <h2>Skills</h2>
 
-                    <div className="skills-grid">
+                    {
+                        skills.length === 0 ? (
 
-                        <span>React</span>
-                        <span>JavaScript</span>
-                        <span>Node.js</span>
-                        <span>Express</span>
-                        <span>MongoDB</span>
-                        <span>Java</span>
-                        <span>Python</span>
-                        <span>Docker</span>
-                        <span>Git</span>
-                        <span>REST API</span>
+                            <div className="empty-state">
+                                <p>No Skills Added Yet</p>
+                            </div>
 
-                    </div>
+                        ) : (
+
+                            <div className="skills-grid">
+
+                                {
+                                    skills.map((skill) => (
+
+                                        <span key={skill.id}>
+                                            {skill.name}
+                                        </span>
+
+                                    ))
+                                }
+
+                            </div>
+
+                        )
+                    }
 
                 </section>
 
@@ -287,7 +471,11 @@ const StudentView = () => {
 
                             <small>Open To Work</small>
 
-                            <h4>Yes</h4>
+                            <h4>
+                                {student.open_to_work
+                                    ? "Yes"
+                                    : "No"}
+                            </h4>
 
                         </div>
 
@@ -295,7 +483,9 @@ const StudentView = () => {
 
                             <small>Preferred Job Type</small>
 
-                            <h4>Full Time</h4>
+                            <h4>
+                                {student.preferred_job_type || "Not Added"}
+                            </h4>
 
                         </div>
 
@@ -303,7 +493,9 @@ const StudentView = () => {
 
                             <small>Work Mode</small>
 
-                            <h4>Remote</h4>
+                            <h4>
+                                {student.work_mode || "Not Added"}
+                            </h4>
 
                         </div>
 
@@ -311,7 +503,9 @@ const StudentView = () => {
 
                             <small>Preferred Location</small>
 
-                            <h4>Delhi</h4>
+                            <h4>
+                                {student.preferred_location || "Not Added"}
+                            </h4>
 
                         </div>
 
@@ -325,65 +519,74 @@ const StudentView = () => {
 
                     <h2>Social Links</h2>
 
-                    <div className="social-grid">
+                    {
+                        !student.github &&
+                            !student.linkedin &&
+                            !student.portfolio &&
+                            !student.leetcode ? (
 
-                        <div className="social-card">
+                            <p>No Social Links Added</p>
 
-                            <h4>GitHub</h4>
+                        ) : (
 
-                            <a
-                                href="https://github.com/rahul"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                github.com/rahul
-                            </a>
+                            <div className="social-grid">
 
-                        </div>
+                                {student.github && (
+                                    <div className="social-card">
+                                        <h4>GitHub</h4>
+                                        <a
+                                            href={student.github}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {student.github}
+                                        </a>
+                                    </div>
+                                )}
 
-                        <div className="social-card">
+                                {student.linkedin && (
+                                    <div className="social-card">
+                                        <h4>LinkedIn</h4>
+                                        <a
+                                            href={student.linkedin}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {student.linkedin}
+                                        </a>
+                                    </div>
+                                )}
 
-                            <h4>LinkedIn</h4>
+                                {student.portfolio && (
+                                    <div className="social-card">
+                                        <h4>Portfolio</h4>
+                                        <a
+                                            href={student.portfolio}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {student.portfolio}
+                                        </a>
+                                    </div>
+                                )}
 
-                            <a
-                                href="https://linkedin.com/in/rahul"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                linkedin.com/in/rahul
-                            </a>
+                                {student.leetcode && (
+                                    <div className="social-card">
+                                        <h4>LeetCode</h4>
+                                        <a
+                                            href={student.leetcode}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {student.leetcode}
+                                        </a>
+                                    </div>
+                                )}
 
-                        </div>
+                            </div>
 
-                        <div className="social-card">
-
-                            <h4>Portfolio</h4>
-
-                            <a
-                                href="https://rahul.dev"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                rahul.dev
-                            </a>
-
-                        </div>
-
-                        <div className="social-card">
-
-                            <h4>LeetCode</h4>
-
-                            <a
-                                href="https://leetcode.com/rahul"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                leetcode.com/rahul
-                            </a>
-
-                        </div>
-
-                    </div>
+                        )
+                    }
 
                 </section>
 
@@ -395,12 +598,12 @@ const StudentView = () => {
 
                         <div>
                             <small>Email</small>
-                            <p>rahul@gmail.com</p>
+                            <p>{email}</p>
                         </div>
 
                         <div>
                             <small>Phone</small>
-                            <p>9876543210</p>
+                            <p>{student.phone || "Not Added"}</p>
                         </div>
 
                     </div>

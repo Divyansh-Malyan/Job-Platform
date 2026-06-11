@@ -143,6 +143,7 @@ const JobPage = () => {
 
                     <div>
                       <h3>{job.role}</h3>
+                      <h5 className="comp_name">{job.company_name}</h5>
                       <p>{job.description_job}</p>
                     </div>
 

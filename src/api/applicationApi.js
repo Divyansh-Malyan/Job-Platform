@@ -31,3 +31,17 @@ export const checkApplied = async (
 
   return response.data;
 };
+
+export const updateApplicationStatus = async (
+  applicationId,
+  status
+) => {
+
+  const response = await axios.patch(
+    `${API_URL}/applications/${applicationId}/status`,
+    { status }
+  );
+
+  return response.data;
+
+};

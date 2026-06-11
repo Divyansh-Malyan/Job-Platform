@@ -6,8 +6,12 @@ import useUserStore from "../../store/userStore";
 import supabase from "../../utils/supabase_client";
 import toast from "react-hot-toast";
 import { IoIosNotifications } from "react-icons/io";
+import { getNotifications }
+from "../../api/notificationApi";
 
 const Navbar = () => {
+  const [notificationCount, setNotificationCount] =
+  useState(0);
 
   const user = useUserStore((state) => state.user);
   const profile = useUserStore((state) => state.profile);
@@ -18,7 +22,7 @@ const Navbar = () => {
   const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
-  const notificationCount = 3;
+
 
   const menuRef = useRef(null);
 
@@ -78,6 +82,37 @@ const Navbar = () => {
     navigate("/");
 
   };
+
+  useEffect(() => {
+
+    const fetchNotificationCount =
+      async () => {
+  
+        if (!user?.id) return;
+  
+        try {
+  
+          const data =
+            await getNotifications(user.id);
+  
+          const unread =
+            data.notifications.filter(
+              n => !n.is_read
+            ).length;
+  
+          setNotificationCount(unread);
+  
+        } catch (error) {
+  
+          console.error(error);
+  
+        }
+  
+      };
+  
+    fetchNotificationCount();
+  
+  }, [user]);
 
   return (
 

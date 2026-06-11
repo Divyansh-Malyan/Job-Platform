@@ -64,3 +64,21 @@ export const updateJob = async (
 
   return response.data;
 };
+
+export const getApplicantsByJob = async (jobId) => {
+  const response = await axios.get(
+    `${API_URL}/jobs/job/${jobId}`
+  );
+
+  return response.data;
+};
+
+export const getRecruiterCompany = async (
+  recruiterId
+) => {
+  const response = await axios.get(
+    `${API_URL}/jobs/recruiter/company/${recruiterId}`
+  );
+
+  return response.data;
+};

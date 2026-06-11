@@ -5,28 +5,18 @@ import { getRecruiterDashboard } from "../../api/dashboardApi";
 import { useNavigate } from "react-router-dom";
 
 const RecruiterDashboard = () => {
-  const [search, setSearch] = useState("");
+
   const navigate = useNavigate();
 
-  const user = useUserStore((state) => state.user);
-
-  const [dashboardData, setDashboardData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const stats =
-    dashboardData?.stats || {};
-
-  const recentJobs =
-    dashboardData?.jobs || [];
-
-  const applications =
-    dashboardData?.recentApplications || [];
-
-  const filteredJobs = recentJobs.filter(
-    (job) =>
-      (job.role || "")
-        .toLowerCase()
-        .includes(search.toLowerCase())
+  const user = useUserStore(
+    (state) => state.user
   );
+
+  const [dashboardData, setDashboardData] =
+    useState(null);
+
+  const [loading, setLoading] =
+    useState(true);
 
   useEffect(() => {
 
@@ -35,7 +25,9 @@ const RecruiterDashboard = () => {
       try {
 
         const data =
-          await getRecruiterDashboard(user.id);
+          await getRecruiterDashboard(
+            user.id
+          );
 
         setDashboardData(data);
 
@@ -48,6 +40,7 @@ const RecruiterDashboard = () => {
         setLoading(false);
 
       }
+
     };
 
     if (user) {
@@ -63,10 +56,21 @@ const RecruiterDashboard = () => {
   if (!dashboardData) {
     return <h2>Dashboard Not Found</h2>;
   }
+
+  const stats =
+    dashboardData?.stats || {};
+
   const pipeline =
     dashboardData?.pipeline || {};
 
+  const recentJobs =
+    dashboardData?.jobs || [];
+
+  const applications =
+    dashboardData?.recentApplications || [];
+
   return (
+
     <div className="recruiter-dashboard">
 
       {/* HERO */}
@@ -83,23 +87,20 @@ const RecruiterDashboard = () => {
 
           <button
             className="primary-btn"
-            onClick={() => navigate("/recruiterpost")}
+            onClick={() =>
+              navigate("/recruiterpost")
+            }
           >
             + Post New Job
           </button>
 
           <button
             className="secondary-btn"
-            onClick={() => navigate("/manage-jobs")}
+            onClick={() =>
+              navigate("/manage-jobs")
+            }
           >
             Manage Jobs
-          </button>
-
-          <button
-            className="secondary-btn"
-            onClick={() => navigate("/view-applicants")}
-          >
-            View Applicants
           </button>
 
         </div>
@@ -147,9 +148,9 @@ const RecruiterDashboard = () => {
               <p>Pending</p>
             </div>
 
-            <div className="pipeline-card reviewed">
-              <h3>{pipeline.reviewed || 0}</h3>
-              <p>Reviewed</p>
+            <div className="pipeline-card shortlisted">
+              <h3>{pipeline.shortlisted || 0}</h3>
+              <p>Shortlisted</p>
             </div>
 
             <div className="pipeline-card accepted">
@@ -166,24 +167,6 @@ const RecruiterDashboard = () => {
 
         </section>
 
-        {/* ACTIVITY */}
-
-        <section className="dashboard-section">
-
-          <h2>Recent Activity</h2>
-
-          <div className="empty-state">
-
-            <h3>No Recent Activity</h3>
-
-            <p>
-              Activity will appear here once jobs and applications start coming in.
-            </p>
-
-          </div>
-
-        </section>
-
         {/* RECENT JOBS */}
 
         <section className="dashboard-section">
@@ -192,18 +175,25 @@ const RecruiterDashboard = () => {
 
             <h2>Recent Jobs</h2>
 
-            <button className="secondary-btn">
+            <button
+              className="secondary-btn"
+              onClick={() =>
+                navigate("/manage-jobs")
+              }
+            >
               View All
             </button>
 
           </div>
 
           {
-            filteredJobs.length === 0 ? (
+            recentJobs.length === 0 ? (
 
               <div className="empty-state">
 
-                <h3>No Jobs Posted Yet</h3>
+                <h3>
+                  No Jobs Posted Yet
+                </h3>
 
                 <p>
                   Post your first job to start receiving applications.
@@ -211,7 +201,9 @@ const RecruiterDashboard = () => {
 
                 <button
                   className="primary-btn"
-                  onClick={() => navigate("/recruiterpost")}
+                  onClick={() =>
+                    navigate("/recruiterpost")
+                  }
                 >
                   Post Job
                 </button>
@@ -222,7 +214,7 @@ const RecruiterDashboard = () => {
 
               <div className="jobs-grid">
 
-                {filteredJobs.map((job) => (
+                {recentJobs.map((job) => (
 
                   <div
                     key={job.id}
@@ -233,10 +225,14 @@ const RecruiterDashboard = () => {
 
                       <div>
 
-                        <h3>{job.role}</h3>
+                        <h3>
+                          {job.role}
+                        </h3>
 
                         <p>
-                          {job.job_type} • {job.location_job}
+                          {job.job_type}
+                          {" • "}
+                          {job.location_job}
                         </p>
 
                       </div>
@@ -249,19 +245,35 @@ const RecruiterDashboard = () => {
 
                     </div>
 
-                    <h4>{job.salary}</h4>
+                    <h4>
+                      {job.salary}
+                    </h4>
 
                     <p>
-                      Applicants
+                      Status: {job.status}
                     </p>
 
                     <div className="job-actions">
 
-                      <button className="primary-btn">
+                      <button
+                        className="primary-btn"
+                        onClick={() =>
+                          navigate(
+                            `/job/${job.id}/applicants`
+                          )
+                        }
+                      >
                         View Applicants
                       </button>
 
-                      <button className="secondary-btn">
+                      <button
+                        className="secondary-btn"
+                        onClick={() =>
+                          navigate(
+                            `/edit-job/${job.id}`
+                          )
+                        }
+                      >
                         Edit Job
                       </button>
 
@@ -278,178 +290,11 @@ const RecruiterDashboard = () => {
 
         </section>
 
-        {/* RECENT APPLICATIONS */}
-
-        <section className="dashboard-section">
-
-          <h2>Recent Applications</h2>
-
-          {
-            applications.length === 0 ? (
-
-              <div className="empty-state">
-
-                <h3>No Applications Yet</h3>
-
-                <p>
-                  Applications will appear here once candidates apply.
-                </p>
-
-              </div>
-
-            ) : (
-
-              <div className="applications-grid">
-
-                {applications.map((app) => (
-
-                  <div
-                    key={app.id}
-                    className="application-card"
-                  >
-
-                    <h3>{app.student_name}</h3>
-
-                    <p>Applied For</p>
-
-                    <strong>{app.job_role}</strong>
-
-                    <span>{app.status}</span>
-
-                    <button className="primary-btn">
-                      View Profile
-                    </button>
-
-                  </div>
-
-                ))}
-
-              </div>
-
-            )
-          }
-
-        </section>
-
-        {/* JOB TABLE */}
-
-        {/* <section className="dashboard-section">
-
-                    <div className="section-header">
-
-                        <h2>Job Management</h2>
-
-                        <input
-  type="text"
-  placeholder="Search jobs..."
-  className="search-box"
-  value={search}
-  onChange={(e) =>
-    setSearch(e.target.value)
-  }
-/>
-
-                    </div>
-
-                    <div className="table-wrapper">
-
-                        <table>
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>Job</th>
-
-                                    <th>Type</th>
-
-                                    <th>Applicants</th>
-
-                                    <th>Status</th>
-
-                                    <th>Actions</th>
-
-                                </tr>
-
-                            </thead> */}
-
-        {/* <tbody>
-
-                                <tr>
-
-                                    <td>Frontend Developer</td>
-
-                                    <td>Full Time</td>
-
-                                    <td>22</td>
-
-                                    <td>
-                                        <span className="status-badge">
-                                            Active
-                                        </span>
-                                    </td>
-
-                                    <td className="table-actions">
-
-                                        <button>
-                                            View
-                                        </button>
-
-                                        <button>
-                                            Edit
-                                        </button>
-
-                                        <button className="danger-btn">
-                                            Delete
-                                        </button>
-
-                                    </td>
-
-                                </tr>
-
-                                <tr>
-
-                                    <td>Backend Developer</td>
-
-                                    <td>Full Time</td>
-
-                                    <td>18</td>
-
-                                    <td>
-                                        <span className="status-badge">
-                                            Active
-                                        </span>
-                                    </td>
-
-                                    <td className="table-actions">
-
-                                        <button>
-                                            View
-                                        </button>
-
-                                        <button>
-                                            Edit
-                                        </button>
-
-                                        <button className="danger-btn">
-                                            Delete
-                                        </button>
-
-                                    </td>
-
-                                </tr>
-
-                            </tbody> */}
-
-        {/* </table>
-
-                    </div>
-
-                </section> */}
 
       </div>
 
     </div>
+
   );
 };
 

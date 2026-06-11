@@ -1,118 +1,227 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ViewApplicants.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { getApplicantsByJob } from "../../api/jobApi";
+import {
+    updateApplicationStatus
+} from "../../api/applicationApi";
 
 const ViewApplicants = () => {
-
     const navigate = useNavigate();
+    const { jobId } = useParams();
 
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
+    const [applicants, setApplicants] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const applicants = [
-        {
-            id: 1,
-            name: "Rahul Sharma",
-            role: "Frontend Developer",
-            location: "Delhi, India",
-            appliedDate: "12 Jun 2026",
-            status: "Pending",
-            skills: ["React", "Node.js", "MongoDB"]
-        },
-        {
-            id: 2,
-            name: "Priya Singh",
-            role: "UI Designer",
-            location: "Bangalore, India",
-            appliedDate: "10 Jun 2026",
-            status: "Reviewed",
-            skills: ["Figma", "Adobe XD"]
-        },
-        {
-            id: 3,
-            name: "Aman Verma",
-            role: "Backend Developer",
-            location: "Pune, India",
-            appliedDate: "08 Jun 2026",
-            status: "Accepted",
-            skills: ["Java", "Spring Boot", "MySQL"]
+    useEffect(() => {
+        if (jobId) {
+            fetchApplicants();
         }
-    ];
+    }, [jobId]);
 
-    const totalApplicants = applicants.length;
+    const fetchApplicants = async () => {
+        try {
+            const data =
+                await getApplicantsByJob(jobId);
 
-    const pendingApplicants = applicants.filter(
-        app => app.status === "Pending"
-    ).length;
+            console.log(
+                "Applicants:",
+                data
+            );
 
-    const reviewedApplicants = applicants.filter(
-        app => app.status === "Reviewed"
-    ).length;
+            setApplicants(
+                data.applicants || []
+            );
 
-    const acceptedApplicants = applicants.filter(
-        app => app.status === "Accepted"
-    ).length;
+        } catch (error) {
 
-    const filteredApplicants = applicants.filter(
-        (applicant) => {
+            console.error(error);
 
-            const matchesSearch =
-                applicant.name
-                    .toLowerCase()
-                    .includes(search.toLowerCase());
+        } finally {
 
-            const matchesStatus =
-                statusFilter === "All" ||
-                applicant.status === statusFilter;
+            setLoading(false);
 
-            return matchesSearch && matchesStatus;
         }
-    );
+    };
+
+    const totalApplicants =
+        applicants.length;
+
+    const pendingApplicants =
+        applicants.filter(
+            (app) =>
+                app.status?.toLowerCase() ===
+                "pending"
+        ).length;
+
+    const shortlistedApplicants =
+        applicants.filter(
+            (app) =>
+                app.status?.toLowerCase() ===
+                "shortlisted"
+        ).length;
+
+    const acceptedApplicants =
+        applicants.filter(
+            (app) =>
+                app.status?.toLowerCase() ===
+                "accepted"
+        ).length;
+
+    const filteredApplicants =
+        applicants.filter(
+            (applicant) => {
+
+                const matchesSearch =
+                    applicant.name
+                        ?.toLowerCase()
+                        .includes(
+                            search.toLowerCase()
+                        );
+
+                const matchesStatus =
+                    statusFilter === "All" ||
+                    applicant.status
+                        ?.toLowerCase() ===
+                    statusFilter.toLowerCase();
+
+                return (
+                    matchesSearch &&
+                    matchesStatus
+                );
+            }
+        );
+
+    if (loading) {
+        return (
+            <h2>
+                Loading Applicants...
+            </h2>
+        );
+    }
+
+    const handleAccept = async (
+        applicationId
+    ) => {
+
+        try {
+
+            await updateApplicationStatus(
+                applicationId,
+                "Accepted"
+            );
+
+            fetchApplicants();
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    };
+
+    const handleReject = async (
+        applicationId
+    ) => {
+
+        try {
+
+            await updateApplicationStatus(
+                applicationId,
+                "Rejected"
+            );
+
+            fetchApplicants();
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    };
+
+    const handleShortlist = async (
+        applicationId
+    ) => {
+
+        try {
+
+            await updateApplicationStatus(
+                applicationId,
+                "Shortlisted"
+            );
+
+            fetchApplicants();
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    };
 
     return (
         <div className="view-applicants-page">
 
             <section className="applicants-hero">
 
-                <h1>Frontend Developer</h1>
+                <h1>Applicants</h1>
 
-                <h3>{totalApplicants} Applicants</h3>
+                <h3>
+                    {totalApplicants} Applicants
+                </h3>
 
                 <p>
-                    Review and manage candidates for this job.
+                    Review and manage
+                    candidates for this job.
                 </p>
 
             </section>
 
             <div className="applicants-container">
 
-                {/* STATS */}
+                {/* Stats */}
 
                 <div className="stats-grid">
 
                     <div className="stat-card">
-                        <h2>{totalApplicants}</h2>
-                        <p>Total Applicants</p>
+                        <h2>
+                            {totalApplicants}
+                        </h2>
+                        <p>
+                            Total Applicants
+                        </p>
                     </div>
 
                     <div className="stat-card">
-                        <h2>{pendingApplicants}</h2>
+                        <h2>
+                            {pendingApplicants}
+                        </h2>
                         <p>Pending</p>
                     </div>
 
                     <div className="stat-card">
-                        <h2>{reviewedApplicants}</h2>
-                        <p>Reviewed</p>
+                        <h2>
+                            {shortlistedApplicants}
+                        </h2>
+                        <p>Shortlisted</p>
                     </div>
 
                     <div className="stat-card">
-                        <h2>{acceptedApplicants}</h2>
+                        <h2>
+                            {acceptedApplicants}
+                        </h2>
                         <p>Accepted</p>
                     </div>
 
                 </div>
 
-                {/* FILTERS */}
+                {/* Filters */}
 
                 <div className="filter-bar">
 
@@ -122,86 +231,118 @@ const ViewApplicants = () => {
                         className="search-box"
                         value={search}
                         onChange={(e) =>
-                            setSearch(e.target.value)
+                            setSearch(
+                                e.target.value
+                            )
                         }
                     />
 
                     <select
                         value={statusFilter}
                         onChange={(e) =>
-                            setStatusFilter(e.target.value)
+                            setStatusFilter(
+                                e.target.value
+                            )
                         }
                     >
-                        <option>All</option>
-                        <option>Pending</option>
-                        <option>Reviewed</option>
-                        <option>Accepted</option>
-                        <option>Rejected</option>
+                        <option>
+                            All
+                        </option>
+                        <option>
+                            Pending
+                        </option>
+                        <option>
+                            Shortlisted
+                        </option>
+                        <option>
+                            Accepted
+                        </option>
+                        <option>
+                            Rejected
+                        </option>
                     </select>
 
                 </div>
 
-                {/* APPLICANTS */}
+                {/* Applicants */}
 
-                {
-                    filteredApplicants.length === 0 ? (
+                {filteredApplicants.length === 0 ? (
 
-                        <div className="empty-state">
+                    <div className="empty-state">
 
-                            <h2>No Applicants Found</h2>
+                        <h2>
+                            No Applicants Found
+                        </h2>
 
-                            <p>
-                                Try changing your search or filter.
-                            </p>
+                        <p>
+                            Try changing your
+                            search or filter.
+                        </p>
 
-                        </div>
+                    </div>
 
-                    ) : (
+                ) : (
 
-                        <div className="applicants-grid">
+                    <div className="applicants-grid">
 
-                            {filteredApplicants.map((applicant) => (
+                        {filteredApplicants.map(
+                            (applicant) => (
 
                                 <div
-                                    key={applicant.id}
+                                    key={
+                                        applicant.application_id
+                                    }
                                     className="applicant-card"
                                 >
 
-                                    <h3>{applicant.name}</h3>
+                                    <h3>
+                                        {applicant.name}
+                                    </h3>
 
                                     <p className="role">
-                                        {applicant.role}
+                                        {
+                                            applicant.headline ||
+                                            "Student"
+                                        }
                                     </p>
 
-                                    <p className="location">
-                                        📍 {applicant.location}
+                                    <p>
+                                        📧{" "}
+                                        {
+                                            applicant.email
+                                        }
+                                    </p>
+
+                                    <p>
+                                        📍{" "}
+                                        {
+                                            applicant.city ||
+                                            "Not Provided"
+                                        }
+                                    </p>
+
+                                    <p>
+                                        🎓{" "}
+                                        {
+                                            applicant.college ||
+                                            "Not Provided"
+                                        }
                                     </p>
 
                                     <p className="applied-date">
-                                        Applied: {applicant.appliedDate}
+                                        Applied:
+                                        {" "}
+                                        {new Date(
+                                            applicant.created_at
+                                        ).toLocaleDateString()}
                                     </p>
-
-                                    <div className="skills-container">
-
-                                        {applicant.skills.map(
-                                            (skill, index) => (
-
-                                                <span
-                                                    key={index}
-                                                    className="skill-tag"
-                                                >
-                                                    {skill}
-                                                </span>
-
-                                            )
-                                        )}
-
-                                    </div>
 
                                     <span
                                         className={`status-badge ${applicant.status.toLowerCase()}`}
                                     >
-                                        {applicant.status}
+                                        {
+                                            applicant.status
+                                        }
                                     </span>
 
                                     <div className="applicant-actions">
@@ -210,47 +351,76 @@ const ViewApplicants = () => {
                                             className="secondary-btn"
                                             onClick={() =>
                                                 navigate(
-                                                    `/student/${applicant.id}`
+                                                    `/student/${applicant.student_id}`,
+                                                    {
+                                                        state: {
+                                                            applicationId:
+                                                                applicant.application_id,
+                                                            status:
+                                                                applicant.status
+                                                        }
+                                                    }
                                                 )
                                             }
                                         >
                                             View Profile
                                         </button>
 
-                                        <button
-                                            className="secondary-btn"
-                                        >
-                                            Resume
-                                        </button>
 
-                                        <button
-                                            className="primary-btn"
-                                            disabled={
-                                                applicant.status === "Accepted"
-                                            }
-                                        >
-                                            Accept
-                                        </button>
+                                        {applicant.resume_url && (
+                                            <a
+                                                href={
+                                                    applicant.resume_url
+                                                }
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="secondary-btn"
+                                            >
+                                                Resume
+                                            </a>
+                                        )}
 
-                                        <button
-                                            className="danger-btn"
-                                            disabled={
-                                                applicant.status === "Rejected"
-                                            }
-                                        >
-                                            Reject
-                                        </button>
+                                        {applicant.status?.toLowerCase() === "pending" && (
+                                            <>
+                                                <button
+                                                    className="secondary-btn"
+                                                    onClick={() =>
+                                                        handleShortlist(applicant.application_id)
+                                                    }
+                                                >
+                                                    Shortlist
+                                                </button>
+
+                                                <button
+                                                    className="primary-btn"
+                                                    onClick={() =>
+                                                        handleAccept(applicant.application_id)
+                                                    }
+                                                >
+                                                    Accept
+                                                </button>
+
+                                                <button
+                                                    className="danger-btn"
+                                                    onClick={() =>
+                                                        handleReject(applicant.application_id)
+                                                    }
+                                                >
+                                                    Reject
+                                                </button>
+                                            </>
+                                        )}
 
                                     </div>
 
                                 </div>
 
-                            ))}
+                            )
+                        )}
 
-                        </div>
+                    </div>
 
-                    )
-                }
+                )}
 
             </div>
 

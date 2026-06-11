@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./ManageJobs.css";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { getRecruiterJobs, closeJob, deleteJob } from "../../api/jobApi";
 import useUserStore from "../../store/userStore";
@@ -27,7 +27,7 @@ const ManageJobs = () => {
     ).length;
 
     const totalApplicants = jobs.reduce(
-        (total, job) => total + job.applicants,
+        (total, job) => total + Number(job.applicants || 0),
         0
     );
 
@@ -70,38 +70,39 @@ const ManageJobs = () => {
 
     const handleCloseJob = async (jobId) => {
         try {
-          await closeJob(jobId);
-      
-          setJobs((prevJobs) =>
-            prevJobs.map((job) =>
-              job.id === jobId
-                ? { ...job, status: "Closed" }
-                : job
-            )
-          );
-      
-          toast.success("Job Closed");
-      
+            await closeJob(jobId);
+
+            setJobs((prevJobs) =>
+                prevJobs.map((job) =>
+                    job.id === jobId
+                        ? { ...job, status: "Closed" }
+                        : job
+                )
+            );
+
+            toast.success("Job Closed");
+
         } catch (error) {
-          console.error(error);
-          toast.error("Failed To Close Job");
+            console.error(error);
+            toast.error("Failed To Close Job");
         }
-      };
+    };
 
     const handleDeleteJob = async (jobId) => {
         try {
-          await deleteJob(jobId);
-      
-          setJobs((prevJobs) =>
-            prevJobs.filter((job) => job.id !== jobId)
-          );
-      
-          toast.success("Job Deleted");
-      
+            await deleteJob(jobId);
+
+            setJobs((prevJobs) =>
+                prevJobs.filter((job) => job.id !== jobId)
+            );
+
+            toast.success("Job Deleted");
+
         } catch (error) {
-          toast.error("Failed To Delete Job");
+            toast.error("Failed To Delete Job");
         }
-      };
+    };
+
 
     return (
         <div className="manage-jobs-page">
@@ -223,7 +224,7 @@ const ManageJobs = () => {
                                 <h3>{job.role}</h3>
 
                                 <p className="job-meta">
-                                    {job.location_job} • {job.job_type} • {job.salary}
+                                    {job.company_name} • {job.location_job} • {job.job_type} • {job.salary}
                                 </p>
 
                                 <div className="job-details">
@@ -234,7 +235,7 @@ const ManageJobs = () => {
                                     </p>
 
                                     <p className="applicant-count">
-                                        👥 {job.applicants} Applicants
+                                        👥 {job.applicants || 0} Applicants
                                     </p>
 
                                 </div>

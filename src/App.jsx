@@ -64,10 +64,15 @@ const App = () => {
             <Route path="/manage-jobs" element={<ManageJobs />} />
             <Route path="/job/:jobId/applicants" element={<ViewApplicants />} />
             <Route path="/saved-jobs" element={<SavedJobs />} />
-            <Route path="/student/:id" element={<StudentView />} />
+            {/* <Route path="/student/:id" element={<StudentView />} /> */}
             <Route path="/edit-job/:id" element={<EditJob />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/settings" element={<Settings />} />
+            {/* <Route path="/job/:jobId/applicants" element={<ViewApplicants />} /> */}
+            <Route
+    path="/student/:studentId"
+    element={<StudentView />}
+/>
 
 
           </Route>

@@ -209,7 +209,7 @@ const JobDetail = () => {
 
               <div>
                 <h2>{job.role}</h2>
-                <p>{job.location_job}</p>
+                <p>{job.company_name} • {job.location_job}</p>
               </div>
 
             </div>

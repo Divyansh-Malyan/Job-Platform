@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./RecruiterPost.css";
-import { createJob } from "../../api/jobApi";
+import { createJob, getRecruiterCompany } from "../../api/jobApi";
 import toast from "react-hot-toast";
 import useUserStore from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
@@ -46,6 +46,8 @@ const RecruiterPost = () => {
 
       await createJob({
         recruiterId: user.id,
+        company_name: companyInfo.company_name,
+        website: companyInfo.website,
         ...formData,
         status: "Active",
       });
@@ -75,6 +77,8 @@ const RecruiterPost = () => {
 
       await createJob({
         recruiterId: user.id,
+        company_name: companyInfo.company_name,
+        website: companyInfo.website,
         ...formData,
         status: "Draft",
       });
@@ -102,19 +106,24 @@ const RecruiterPost = () => {
 
   const fetchCompanyInfo = async () => {
     try {
-      const data = await getRecruiterJobs(user.id);
 
-      if (data.jobs.length > 0) {
-        setCompanyInfo({
-          company_name: data.jobs[0].company_name || "",
-          website: data.jobs[0].website || "",
-        });
-      }
+      const data =
+        await getRecruiterCompany(user.id);
+
+      setCompanyInfo({
+        company_name:
+          data.company.company_name || "",
+        website:
+          data.company.website || "",
+      });
+      console.log(data.company);
+
     } catch (error) {
+
       console.error(error);
+
     }
   };
-
 
 
   return (
@@ -150,7 +159,12 @@ const RecruiterPost = () => {
                 <input
                   type="text"
                   value={companyInfo.company_name}
-                  readOnly
+                  onChange={(e) =>
+                    setCompanyInfo({
+                      ...companyInfo,
+                      company_name: e.target.value,
+                    })
+                  }
                 />
               </div>
 
@@ -160,7 +174,12 @@ const RecruiterPost = () => {
                 <input
                   type="text"
                   value={companyInfo.website}
-                  readOnly
+                  onChange={(e) =>
+                    setCompanyInfo({
+                      ...companyInfo,
+                      website: e.target.value,
+                    })
+                  }
                 />
               </div>
 
