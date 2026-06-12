@@ -3,7 +3,7 @@ import "./JobPage.css";
 import Instagram from "../../assets/insta.svg";
 import Tesla from "../../assets/tesla.svg";
 import McDonalds from "../../assets/Mcdi.svg";
-import Apple from "../../assets/apple.svg";
+import Apple from "../../assets/Apple.svg";
 import { getJobs } from "../../api/jobApi";
 import { useNavigate } from "react-router-dom";
 
