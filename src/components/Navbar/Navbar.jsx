@@ -114,6 +114,7 @@ const Navbar = () => {
 
   }, [user]);
 
+
   return (
 
     <nav className="navbar">
@@ -240,7 +241,7 @@ const Navbar = () => {
 
                 <img
                   src={
-                    user?.avatar_url ||
+                    profile?.profile_photo ||
                     ProfilePic
                   }
                   alt="Profile"

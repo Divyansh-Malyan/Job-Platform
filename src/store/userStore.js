@@ -8,27 +8,82 @@ const useUserStore = create((set) => ({
 
   // ---------------- INITIALIZE USER ----------------
   initializeUser: async () => {
+
     set({ loading: true });
 
-    const { data } = await supabase.auth.getUser();
+    const { data } =
+      await supabase.auth.getUser();
+
     const user = data?.user;
 
     if (!user) {
-      set({ user: null, profile: null, loading: false });
+
+      set({
+        user: null,
+        profile: null,
+        loading: false
+      });
+
       return;
+
     }
 
-    const { data: profile, error } = await supabase
-      .from("User")
+    // Try Student
+
+    const {
+      data: studentProfile
+    } = await supabase
+      .from("Students")
       .select("*")
-      .eq("user_id", user.id)
-      .single();
+      .eq("user_student_id", user.id)
+      .maybeSingle();
+
+    if (studentProfile) {
+
+      set({
+        user,
+        profile: {
+          ...studentProfile,
+          role: "student"
+        },
+        loading: false
+      });
+
+      return;
+
+    }
+
+    // Try Recruiter
+
+    const {
+      data: recruiterProfile
+    } = await supabase
+      .from("Recruiters")
+      .select("*")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (recruiterProfile) {
+
+      set({
+        user,
+        profile: {
+          ...recruiterProfile,
+          role: "recruiter"
+        },
+        loading: false
+      });
+
+      return;
+
+    }
 
     set({
       user,
-      profile: profile || null,
-      loading: false,
+      profile: null,
+      loading: false
     });
+
   },
 
   // ---------------- UPDATE PROFILE ----------------

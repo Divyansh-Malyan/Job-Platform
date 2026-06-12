@@ -38,10 +38,6 @@ const App = () => {
     initializeUser();
   }, []);
 
-  useEffect(() => {
-    initializeUser();
-  }, []);
-
   return (
 
     <>

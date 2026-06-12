@@ -147,7 +147,10 @@ const StudentView = () => {
             <section className="student-view-hero">
 
                 <img
-                    src={ProfilePic}
+                    src={
+                        student?.profile_photo ||
+                        ProfilePic
+                    }
                     alt="Profile"
                     className="student-view-image"
                 />

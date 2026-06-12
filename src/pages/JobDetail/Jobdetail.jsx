@@ -28,6 +28,14 @@ const JobDetail = () => {
   const [relatedJobs, setRelatedJobs] = useState([]);
 
   const navigate = useNavigate();
+  if (profile?.role === "recruiter") {
+    return (
+      <div>
+        Recruiters cannot apply for jobs.
+      </div>
+    );
+  }
+  console.log(profile);
 
   useEffect(() => {
 
@@ -39,7 +47,7 @@ const JobDetail = () => {
 
         const response = await checkApplied(
           job.id,
-          profile.user_id
+          profile.user_student_id
         );
 
         setApplied(response.applied);
@@ -143,7 +151,7 @@ const JobDetail = () => {
 
         const response =
           await checkSavedJob(
-            profile.user_id,
+            profile.user_student_id,
             job.id
           );
 
@@ -187,7 +195,7 @@ const JobDetail = () => {
 
       await applyJob(
         job.id,
-        profile.user_id
+        profile.user_student_id
       );
 
       setApplied(true);
@@ -231,7 +239,7 @@ const JobDetail = () => {
       if (saved) {
 
         await removeSavedJob(
-          profile.user_id,
+          profile.user_student_id,
           job.id
         );
 
@@ -240,7 +248,7 @@ const JobDetail = () => {
       } else {
 
         await saveJob(
-          profile.user_id,
+          profile.user_student_id,
           job.id
         );
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./EditProfile.css";
 import useUserStore from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
@@ -6,11 +6,13 @@ import {
   getStudentProfile,
   updateStudentProfile
 } from "../../api/studentApi";
+import supabase from "../../utils/supabase_client";
 
 const EditProfile = () => {
 
   const user = useUserStore((state) => state.user);
   const [profilePhoto, setProfilePhoto] = useState(null);
+  const [resumeFile, setResumeFile] = useState(null);
 
   const navigate = useNavigate();
 
@@ -165,9 +167,77 @@ const EditProfile = () => {
 
     try {
 
+      let profilePhotoUrl = null;
+      let resumeUrl = null;
+
+      // ---------------- PROFILE PHOTO ----------------
+
+      if (profilePhoto) {
+
+        const photoPath =
+          `${user.id}-${Date.now()}`;
+
+        const { error } =
+          await supabase.storage
+            .from("profilepicture")
+            .upload(
+              photoPath,
+              profilePhoto,
+              {
+                upsert: true
+              }
+            );
+
+        if (error) throw error;
+
+        const { data } =
+          supabase.storage
+            .from("profilepicture")
+            .getPublicUrl(photoPath);
+
+        profilePhotoUrl =
+          data.publicUrl;
+
+      }
+
+      // ---------------- RESUME ----------------
+
+      if (resumeFile) {
+
+        const resumePath =
+          `${user.id}-${Date.now()}.pdf`;
+
+        const { error } =
+          await supabase.storage
+            .from("studentresume")
+            .upload(
+              resumePath,
+              resumeFile,
+              {
+                upsert: true
+              }
+            );
+
+        if (error) throw error;
+
+        const { data } =
+          supabase.storage
+            .from("studentresume")
+            .getPublicUrl(resumePath);
+
+        resumeUrl =
+          data.publicUrl;
+
+      }
+      console.log("PROFILE URL:", profilePhotoUrl);
+      console.log("RESUME URL:", resumeUrl);
       await updateStudentProfile(
         user.id,
-        formData
+        {
+          ...formData,
+          profilePhotoUrl,
+          resumeUrl
+        }
       );
 
       navigate("/student/profile");
@@ -177,7 +247,114 @@ const EditProfile = () => {
       console.error(error);
 
     }
+
   };
+  useEffect(() => {
+
+    const loadProfile = async () => {
+
+      if (!user) return;
+
+      try {
+
+        const data =
+          await getStudentProfile(user.id);
+
+        setFormData({
+
+          name: data.student?.name || "",
+          headline: data.student?.headline || "",
+          phone: data.student?.phone || "",
+          city: data.student?.city || "",
+          country: data.student?.country || "",
+
+          college: data.student?.college || "",
+          course: data.student?.course || "",
+          graduationYear:
+            data.student?.year_completion || "",
+          cgpa: data.student?.cgpa || "",
+
+          bio: data.student?.about || "",
+
+          skills:
+            data.skills
+              .map((skill) => skill.name)
+              .join(", "),
+
+          experiences:
+            data.experience.length > 0
+              ? data.experience.map((exp) => ({
+                company: exp.company_name || "",
+                role: exp.role || "",
+                duration: exp.duration || "",
+                description: exp.about || ""
+              }))
+              : [
+                {
+                  company: "",
+                  role: "",
+                  duration: "",
+                  description: ""
+                }
+              ],
+
+          projects:
+            data.projects.length > 0
+              ? data.projects.map((project) => ({
+                name: project.project_name || "",
+                techStack:
+                  project.tech_stack || "",
+                github:
+                  project.github_link || "",
+                demo:
+                  project.demo_link || "",
+                description:
+                  project.description || ""
+              }))
+              : [
+                {
+                  name: "",
+                  techStack: "",
+                  github: "",
+                  demo: "",
+                  description: ""
+                }
+              ],
+
+          github: data.student?.github || "",
+          linkedin: data.student?.linkedin || "",
+          portfolio: data.student?.portfolio || "",
+          leetcode: data.student?.leetcode || "",
+
+          resume: "",
+
+          openToWork:
+            data.student?.open_to_work
+              ? "true"
+              : "false",
+
+          preferredJobType:
+            data.student?.preferred_job_type || "",
+
+          workMode:
+            data.student?.work_mode || "",
+
+          preferredLocation:
+            data.student?.preferred_location || ""
+
+        });
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    };
+
+    loadProfile();
+
+  }, [user]);
 
   return (
 
@@ -225,7 +402,7 @@ const EditProfile = () => {
             />
 
             <input
-              value={profile?.email || ""}
+              value={user?.email || ""}
               disabled
             />
 
@@ -593,10 +770,7 @@ const EditProfile = () => {
             name="resume"
             accept=".pdf"
             onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                resume: e.target.files[0]
-              }))
+              setResumeFile(e.target.files[0])
             }
           />
 

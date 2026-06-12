@@ -67,14 +67,36 @@
     margin-bottom: 30px;
   }
   
-  .recruiter-actions button {
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    border-radius: 14px;
-    padding: 14px 24px;
-    transition: 0.3s;
-  }
+  .recruiter-actions button,
+.recruiter-actions a {
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 14px;
+  padding: 14px 24px;
+  transition: 0.3s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 170px;
+}
+
+.recruiter-actions button:hover,
+.recruiter-actions a:hover {
+  transform: translateY(-2px);
+}
+
+.download-btn {
+  background: white;
+  color: #35b0a7;
+  border: 2px solid #35b0a7;
+}
+
+.download-btn:hover {
+  background: #35b0a7;
+  color: white;
+}
   
   .recruiter-actions button:hover {
     transform: translateY(-2px);

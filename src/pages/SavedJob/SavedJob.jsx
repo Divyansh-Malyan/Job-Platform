@@ -39,13 +39,17 @@ const SavedJobs = () => {
     const [filter, setFilter] =
         useState("All");
 
-    useEffect(() => {
+        useEffect(() => {
 
-        if (profile?.user_id) {
-            fetchSavedJobs();
-        }
-
-    }, [profile]);
+            console.log("PROFILE:", profile);
+        
+            if (profile?.user_student_id) {
+                fetchSavedJobs();
+            } else {
+                setLoading(false);
+            }
+        
+        }, [profile]);
 
     const fetchSavedJobs =
         async () => {
@@ -54,7 +58,7 @@ const SavedJobs = () => {
 
                 const data =
                     await getSavedJobs(
-                        profile.user_id
+                        profile.user_student_id
                     );
 
                 setSavedJobs(
@@ -79,7 +83,7 @@ const SavedJobs = () => {
             try {
 
                 await removeSavedJob(
-                    profile.user_id,
+                    profile.user_student_id,
                     jobId
                 );
 

@@ -13,12 +13,20 @@ const Student = () => {
     const [skills, setSkills] = useState([]);
     const [experience, setExperience] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+    const profile = useUserStore((state) => state.profile);
+
 
     useEffect(() => {
 
+        if (profile?.role === "recruiter") {
+            navigate("/recruiterdashboard");
+            return;
+        }
+
         const fetchProfile = async () => {
 
-            if (!user) return;
+            if (!user?.id) return;
 
             try {
 
@@ -32,40 +40,20 @@ const Student = () => {
 
             } catch (error) {
 
-                console.log(error);
+                console.error(error);
 
             } finally {
 
                 setLoading(false);
 
             }
+
         };
 
         fetchProfile();
 
-    }, [user]);
-    const navigate = useNavigate();
-    const profileCompletion = 75;
-    // const projects = [
-    //     {
-    //         id: 1,
-    //         title: "Job Platform Web App",
-    //         tech: "React • Node.js • MongoDB",
-    //         description:
-    //             "Developed a full-stack recruitment platform with authentication, dashboards, applications, and profile management.",
-    //         github: "#",
-    //         demo: "#",
-    //     },
-    //     {
-    //         id: 2,
-    //         title: "Portfolio Website",
-    //         tech: "React • CSS",
-    //         description:
-    //             "Responsive developer portfolio showcasing projects and skills.",
-    //         github: "#",
-    //         demo: "#",
-    //     },
-    // ];
+    }, [user, profile, navigate]);
+
     if (loading) {
         return <h2>Loading...</h2>;
     }
@@ -76,6 +64,7 @@ const Student = () => {
             </div>
         );
     }
+
 
     return (
         <div className="student-page">
@@ -101,7 +90,10 @@ const Student = () => {
                     <div className="profile-main">
 
                         <img
-                            src={ProfilePic}
+                            src={
+                                student?.profile_photo ||
+                                ProfilePic
+                            }
                             alt="profile"
                             className="profile-image"
                         />
@@ -137,7 +129,7 @@ const Student = () => {
                         </div>
 
                     </div>
-                    <div className="completion-card">
+                    {/* <div className="completion-card">
 
                         <span>Profile Completion</span>
 
@@ -147,7 +139,7 @@ const Student = () => {
                             Complete your profile to attract more recruiters.
                         </p>
 
-                    </div>
+                    </div> */}
 
                     <div className="profile-actions">
 
@@ -225,7 +217,7 @@ const Student = () => {
                                         </div>
 
                                         <span>
-                                                {exp.duration || "Present"}
+                                            {exp.duration || "Present"}
                                         </span>
 
                                     </div>
@@ -277,7 +269,7 @@ const Student = () => {
                                         </h4>
 
                                         <p className="tech-stack">
-                                            Project
+                                            {project.tech_stack || "Tech Stack Not Added"}
                                         </p>
 
                                         <p>
