@@ -7,11 +7,11 @@ import supabase from "../../utils/supabase_client";
 import toast from "react-hot-toast";
 import { IoIosNotifications } from "react-icons/io";
 import { getNotifications }
-from "../../api/notificationApi";
+  from "../../api/notificationApi";
 
 const Navbar = () => {
   const [notificationCount, setNotificationCount] =
-  useState(0);
+    useState(0);
 
   const user = useUserStore((state) => state.user);
   const profile = useUserStore((state) => state.profile);
@@ -87,31 +87,31 @@ const Navbar = () => {
 
     const fetchNotificationCount =
       async () => {
-  
+
         if (!user?.id) return;
-  
+
         try {
-  
+
           const data =
             await getNotifications(user.id);
-  
+
           const unread =
             data.notifications.filter(
               n => !n.is_read
             ).length;
-  
+
           setNotificationCount(unread);
-  
+
         } catch (error) {
-  
+
           console.error(error);
-  
+
         }
-  
+
       };
-  
+
     fetchNotificationCount();
-  
+
   }, [user]);
 
   return (
@@ -279,6 +279,26 @@ const Navbar = () => {
                     >
                       My Profile
                     </button>
+
+                    {
+                      profile?.role !== "recruiter" && (
+
+                        <button
+                          onClick={() => {
+
+                            navigate(
+                              "/saved-jobs"
+                            );
+
+                            setShowMenu(false);
+
+                          }}
+                        >
+                          Saved Jobs
+                        </button>
+
+                      )
+                    }
 
                     <button
                       onClick={() => {

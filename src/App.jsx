@@ -23,6 +23,10 @@ import StudentView from "./pages/StudentView/StudentView";
 import EditJob from "./pages/EditJob/EditJob"
 import Notifications from "./pages/Notification/Notification";
 import Settings from "./pages/Setting/Setting";
+import ForgotPassword
+  from "./pages/ForgotPassword/ForgotPassword";
+import ResetPassword
+  from "./pages/ResetPassword/ResetPassword";
 
 
 
@@ -70,9 +74,9 @@ const App = () => {
             <Route path="/settings" element={<Settings />} />
             {/* <Route path="/job/:jobId/applicants" element={<ViewApplicants />} /> */}
             <Route
-    path="/student/:studentId"
-    element={<StudentView />}
-/>
+              path="/student/:studentId"
+              element={<StudentView />}
+            />
 
 
           </Route>
@@ -81,6 +85,15 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/signup-recruiter" element={<SignUp />} />
+          <Route
+            path="/forgot-password"
+            element={<ForgotPassword />}
+          />
+
+          <Route
+            path="/reset-password"
+            element={<ResetPassword />}
+          />
         </Routes>
       </BrowserRouter>
     </>

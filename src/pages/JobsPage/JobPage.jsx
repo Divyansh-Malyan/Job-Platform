@@ -5,7 +5,7 @@ import Tesla from "../../assets/tesla.svg";
 import McDonalds from "../../assets/mcdi.svg";
 import Apple from "../../assets/apple.svg";
 import { getJobs } from "../../api/jobApi";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 const JobPage = () => {
   const navigate = useNavigate();
@@ -144,7 +144,13 @@ const JobPage = () => {
                     <div>
                       <h3>{job.role}</h3>
                       <h5 className="comp_name">{job.company_name}</h5>
-                      <p>{job.description_job}</p>
+                      <p>
+                        {
+                          job.description_job?.length > 180
+                            ? `${job.description_job.slice(0, 180)}...`
+                            : job.description_job
+                        }
+                      </p>
                     </div>
 
                   </div>

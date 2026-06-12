@@ -443,3 +443,11 @@
 .comp_name{
   padding-bottom: 2%;
 }
+.job-info {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  flex: 1;
+  min-width: 0;
+}

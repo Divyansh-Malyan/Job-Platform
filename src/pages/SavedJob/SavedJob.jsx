@@ -1,52 +1,145 @@
-import React from "react";
+import React, {
+    useEffect,
+    useState
+} from "react";
+
 import "./SavedJob.css";
-import { useNavigate } from "react-router-dom";
+
+import {
+    useNavigate
+} from "react-router-dom";
+
+import useUserStore
+    from "../../store/userStore";
+
+import {
+    getSavedJobs,
+    removeSavedJob
+} from "../../api/savedJobApi";
 
 const SavedJobs = () => {
 
-    const navigate = useNavigate();
+    const navigate =
+        useNavigate();
 
-    const savedJobs = [
-        {
-            id: 1,
-            title: "Frontend Developer",
-            company: "Google",
-            logo: "https://via.placeholder.com/60",
-            location: "Remote",
-            type: "Internship",
-            salary: "₹30,000/month",
-            savedDate: "2 days ago"
-        },
-        {
-            id: 2,
-            title: "Backend Developer",
-            company: "Microsoft",
-            logo: "https://via.placeholder.com/60",
-            location: "Bangalore",
-            type: "Full Time",
-            salary: "₹10 LPA",
-            savedDate: "Yesterday"
-        },
-        {
-            id: 3,
-            title: "UI/UX Designer",
-            company: "Adobe",
-            logo: "https://via.placeholder.com/60",
-            location: "Remote",
-            type: "Full Time",
-            salary: "₹9 LPA",
-            savedDate: "4 days ago"
+    const profile =
+        useUserStore(
+            (state) => state.profile
+        );
+
+    const [savedJobs, setSavedJobs] =
+        useState([]);
+
+    const [loading, setLoading] =
+        useState(true);
+
+    const [search, setSearch] =
+        useState("");
+
+    const [filter, setFilter] =
+        useState("All");
+
+    useEffect(() => {
+
+        if (profile?.user_id) {
+            fetchSavedJobs();
         }
-    ];
+
+    }, [profile]);
+
+    const fetchSavedJobs =
+        async () => {
+
+            try {
+
+                const data =
+                    await getSavedJobs(
+                        profile.user_id
+                    );
+
+                setSavedJobs(
+                    data.jobs || []
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+            } finally {
+
+                setLoading(false);
+
+            }
+
+        };
+
+    const handleRemove =
+        async (jobId) => {
+
+            try {
+
+                await removeSavedJob(
+                    profile.user_id,
+                    jobId
+                );
+
+                setSavedJobs(
+                    (prev) =>
+                        prev.filter(
+                            (job) =>
+                                job.id !==
+                                jobId
+                        )
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+
+        };
+
+    const filteredJobs =
+        savedJobs.filter(
+            (job) => {
+
+                const matchesSearch =
+                    job.role
+                        ?.toLowerCase()
+                        .includes(
+                            search.toLowerCase()
+                        );
+
+                const matchesFilter =
+                    filter === "All" ||
+                    job.work_mode === filter ||
+                    job.job_type === filter;
+
+                return (
+                    matchesSearch &&
+                    matchesFilter
+                );
+
+            }
+        );
+
+    if (loading) {
+        return (
+            <h2>
+                Loading Saved Jobs...
+            </h2>
+        );
+    }
 
     return (
         <div className="saved-jobs-page">
 
-            {/* HERO */}
-
             <section className="saved-jobs-hero">
 
-                <h1>Saved Jobs</h1>
+                <h1>
+                    Saved Jobs
+                </h1>
 
                 <p>
                     Keep track of opportunities you're interested in.
@@ -56,29 +149,18 @@ const SavedJobs = () => {
 
             <div className="saved-jobs-container">
 
-                {/* STATS */}
-
                 <div className="stats-grid">
 
                     <div className="stat-card">
-                        <h2>24</h2>
-                        <p>Saved Jobs</p>
+                        <h2>
+                            {savedJobs.length}
+                        </h2>
+                        <p>
+                            Saved Jobs
+                        </p>
                     </div>
-
-                    <div className="stat-card">
-                        <h2>8</h2>
-                        <p>Applied Jobs</p>
-                    </div>
-
-                    <div className="stat-card">
-                        <h2>4</h2>
-                        <p>Expired Jobs</p>
-                    </div>
-
 
                 </div>
-
-                {/* SEARCH + FILTER */}
 
                 <div className="filter-bar">
 
@@ -86,142 +168,196 @@ const SavedJobs = () => {
                         type="text"
                         placeholder="Search Jobs..."
                         className="search-box"
+                        value={search}
+                        onChange={(e) =>
+                            setSearch(
+                                e.target.value
+                            )
+                        }
                     />
 
-                    <select>
-                        <option>All</option>
-                        <option>Remote</option>
-                        <option>Internship</option>
-                        <option>Full Time</option>
+                    <select
+                        value={filter}
+                        onChange={(e) =>
+                            setFilter(
+                                e.target.value
+                            )
+                        }
+                    >
+                        <option>
+                            All
+                        </option>
+
+                        <option>
+                            Remote
+                        </option>
+
+                        <option>
+                            Internship
+                        </option>
+
+                        <option>
+                            Full Time
+                        </option>
+
                     </select>
 
                 </div>
 
-                {/* JOBS */}
+                {filteredJobs.length === 0 ? (
 
-                {
-                    savedJobs.length === 0 ? (
+                    <div className="empty-state">
 
-                        <div className="empty-state">
+                        <div className="empty-icon">
+                            💼
+                        </div>
 
-                            <div className="empty-icon">
-                                💼
-                            </div>
+                        <h2>
+                            No Saved Jobs Yet
+                        </h2>
 
-                            <h2>
-                                No Saved Jobs Yet
-                            </h2>
+                        <p>
+                            Start saving jobs to view them later.
+                        </p>
 
-                            <p>
-                                Start saving jobs to view them later.
-                            </p>
+                        <button
+                            className="primary-btn"
+                            onClick={() =>
+                                navigate("/jobs")
+                            }
+                        >
+                            Browse Jobs
+                        </button>
 
-                            <button
-                                className="primary-btn"
-                                onClick={() => navigate("/jobs")}
-                            >
-                                Browse Jobs
-                            </button>
+                    </div>
+
+                ) : (
+
+                    <>
+
+                        <div className="jobs-count">
+
+                            <h3>
+                                {
+                                    filteredJobs.length
+                                }
+                                {" "}
+                                Saved Jobs
+                            </h3>
 
                         </div>
 
-                    ) : (
+                        <div className="saved-jobs-grid">
 
-                        <>
+                            {
+                                filteredJobs.map(
+                                    (job) => (
 
-                            <div className="jobs-count">
+                                        <div
+                                            key={job.id}
+                                            className="saved-job-card"
+                                        >
 
-                                <h3>
-                                    {savedJobs.length} Saved Jobs
-                                </h3>
+                                            <div className="job-header">
 
-                            </div>
+                                                <img
+                                                    src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
+                                                    alt="company"
+                                                    className="company-logo"
+                                                />
 
-                            <div className="saved-jobs-grid">
+                                                <div>
 
-                                {savedJobs.map((job) => (
+                                                    <h3>
+                                                        {job.role}
+                                                    </h3>
 
-                                    <div
-                                        key={job.id}
-                                        className="saved-job-card"
-                                    >
+                                                    <p className="company-name">
+                                                        {
+                                                            job.company_name ||
+                                                            "Company"
+                                                        }
+                                                    </p>
 
-                                        <div className="job-header">
+                                                </div>
 
-                                            <img
-                                                src={job.logo}
-                                                alt={job.company}
-                                                className="company-logo"
-                                            />
+                                            </div>
 
-                                            <div>
+                                            <div className="job-details">
 
-                                                <h3>{job.title}</h3>
-
-                                                <p className="company-name">
-                                                    {job.company}
+                                                <p>
+                                                    {
+                                                        job.location_job
+                                                    }
+                                                    {" • "}
+                                                    {
+                                                        job.job_type
+                                                    }
                                                 </p>
+
+                                                <h4>
+                                                    {
+                                                        job.salary
+                                                    }
+                                                </h4>
+
+                                            </div>
+
+                                            <div className="saved-badge">
+                                                Saved
+                                            </div>
+
+                                            <p className="saved-date">
+
+                                                Saved:
+
+                                                {" "}
+
+                                                {
+                                                    new Date(
+                                                        job.saved_at
+                                                    ).toLocaleDateString()
+                                                }
+
+                                            </p>
+
+                                            <div className="job-actions">
+
+                                                <button
+                                                    className="primary-btn"
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/jobdetail/${job.id}`
+                                                        )
+                                                    }
+                                                >
+                                                    View Job
+                                                </button>
+
+                                                <button
+                                                    className="remove-btn"
+                                                    onClick={() =>
+                                                        handleRemove(
+                                                            job.id
+                                                        )
+                                                    }
+                                                >
+                                                    Remove
+                                                </button>
 
                                             </div>
 
                                         </div>
 
-                                        <div className="job-details">
+                                    )
+                                )
+                            }
 
-                                            <p>
-                                                {job.location} • {job.type}
-                                            </p>
+                        </div>
 
-                                            <h4>
-                                                {job.salary}
-                                            </h4>
+                    </>
 
-                                        </div>
-
-                                        <div className="saved-badge">
-                                            Saved
-                                        </div>
-
-                                        <p className="saved-date">
-                                            Saved: {job.savedDate}
-                                        </p>
-
-                                        <div className="job-actions">
-
-                                            <button
-                                                className="primary-btn"
-                                                onClick={() =>
-                                                    navigate(`/jobs/${job.id}`)
-                                                }
-                                            >
-                                                View Job
-                                            </button>
-
-                                            <button
-                                                className="secondary-btn"
-                                                onClick={() =>
-                                                    navigate(`/jobs/${job.id}`)
-                                                }
-                                            >
-                                                Apply
-                                            </button>
-
-                                            <button className="remove-btn">
-                                                Remove
-                                            </button>
-
-                                        </div>
-
-                                    </div>
-
-                                ))}
-
-                            </div>
-
-                        </>
-
-                    )
-                }
+                )}
 
             </div>
 

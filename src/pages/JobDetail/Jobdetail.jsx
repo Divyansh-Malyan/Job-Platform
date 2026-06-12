@@ -5,6 +5,7 @@ import "./JobDetail.css";
 import { applyJob, checkApplied } from "../../api/applicationApi";
 import useUserStore from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
+import { saveJob, removeSavedJob, checkSavedJob } from "../../api/savedJobApi";
 
 import {
   BriefcaseBusiness,
@@ -23,6 +24,7 @@ const JobDetail = () => {
   console.log("Job ID from URL:", id);
   const [job, setJob] = useState(null);
   const [applied, setApplied] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [relatedJobs, setRelatedJobs] = useState([]);
 
   const navigate = useNavigate();
@@ -56,80 +58,110 @@ const JobDetail = () => {
   useEffect(() => {
 
     const fetchJob = async () => {
-  
+
       try {
-  
+
         const response = await axios.get(
           `http://localhost:8080/jobs/${id}`
         );
-  
+
         const currentJob = response.data.job;
-  
+
         setJob(currentJob);
-  
+
         const jobsResponse = await axios.get(
           "http://localhost:8080/jobs"
         );
-  
+
         const filteredJobs = jobsResponse.data.jobs
           .filter((j) => {
-  
+
             if (j.id === currentJob.id) {
               return false;
             }
-  
+
             const sameJobType =
               j.job_type?.toLowerCase().trim() ===
               currentJob.job_type?.toLowerCase().trim();
-  
+
             const sameLocation =
               j.location_job?.toLowerCase().trim() ===
               currentJob.location_job?.toLowerCase().trim();
-  
+
             const roleKeyword =
               currentJob.role
                 ?.toLowerCase()
                 .split(" ")[0];
-  
+
             const similarRole =
               j.role
                 ?.toLowerCase()
                 .includes(roleKeyword);
-  
+
             return (
               sameJobType ||
               sameLocation ||
               similarRole
             );
-  
+
           });
-  
+
         if (filteredJobs.length > 0) {
-  
+
           setRelatedJobs(
             filteredJobs.slice(0, 3)
           );
-  
+
         } else {
-  
+
           const fallbackJobs = jobsResponse.data.jobs
             .filter((j) => j.id !== currentJob.id)
             .slice(0, 2);
-  
+
           setRelatedJobs(fallbackJobs);
-  
+
         }
-  
+
       } catch (error) {
-  
+
         console.error(error);
-  
+
       }
     };
-  
+
     fetchJob();
-  
+
   }, [id]);
+
+  useEffect(() => {
+
+    const checkSaved = async () => {
+
+      if (!profile || !job) return;
+
+      try {
+
+        const response =
+          await checkSavedJob(
+            profile.user_id,
+            job.id
+          );
+
+        setSaved(
+          response.saved
+        );
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    };
+
+    checkSaved();
+
+  }, [profile, job]);
 
   if (!job) {
     return <h2>Loading...</h2>;
@@ -141,7 +173,13 @@ const JobDetail = () => {
   const handleApply = async () => {
 
     if (!user || !profile) {
-      navigate("/login");
+
+      navigate("/login", {
+        state: {
+          redirectTo: `/jobdetail/${job.id}`
+        }
+      });
+
       return;
     }
 
@@ -173,6 +211,79 @@ const JobDetail = () => {
     }
   };
 
+
+
+  const handleSaveJob = async () => {
+
+    if (!profile) {
+
+      navigate("/login", {
+        state: {
+          redirectTo: `/jobdetail/${job.id}`
+        }
+      });
+
+      return;
+    }
+
+    try {
+
+      if (saved) {
+
+        await removeSavedJob(
+          profile.user_id,
+          job.id
+        );
+
+        setSaved(false);
+
+      } else {
+
+        await saveJob(
+          profile.user_id,
+          job.id
+        );
+
+        setSaved(true);
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  };
+
+  const getTimeAgo = (date) => {
+
+    const seconds =
+      Math.floor(
+        (new Date() - new Date(date)) / 1000
+      );
+
+    const minutes =
+      Math.floor(seconds / 60);
+
+    const hours =
+      Math.floor(minutes / 60);
+
+    const days =
+      Math.floor(hours / 24);
+
+    if (days > 0)
+      return `${days} day${days > 1 ? "s" : ""} ago`;
+
+    if (hours > 0)
+      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+
+    if (minutes > 0)
+      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+
+    return "Just now";
+  };
+
   return (
     <div className="job-detail-page">
 
@@ -195,9 +306,23 @@ const JobDetail = () => {
           <div className="job-top-card">
 
             <div className="job-save">
-              <span>10 min ago</span>
 
-              <Bookmark size={22} />
+              <span>
+                {getTimeAgo(job.created_at)}
+              </span>
+
+              <Bookmark
+                size={22}
+                onClick={handleSaveJob}
+                style={{
+                  cursor: "pointer",
+                  fill: saved
+                    ? "#35b0a7"
+                    : "none",
+                  color: "#35b0a7"
+                }}
+              />
+
             </div>
 
             <div className="job-title-row">

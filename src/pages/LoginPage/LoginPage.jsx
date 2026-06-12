@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import './LoginPage.css';
 import google from '../../assets/google.svg';
 import github from '../../assets/github.svg';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { login } from '../../utils/Auth_Client'
 import toast from 'react-hot-toast';
 import useUserStore from "../../store/userStore";
 
 
 const LoginPage = () => {
-
+    const location = useLocation();
     const navigate = useNavigate();
     const initializeUser = useUserStore((state) => state.initializeUser);
 
@@ -33,10 +33,21 @@ const LoginPage = () => {
             await initializeUser();   // refresh Zustand store
             const profile = useUserStore.getState().profile;
 
-            if (profile?.role === "recruiter") {
-                navigate("/recruiterdashboard");
+            const redirectTo =
+                location.state?.redirectTo;
+
+            if (redirectTo) {
+
+                navigate(redirectTo);
+
+            } else if (profile?.role === "recruiter") {
+
+                navigate("/");
+
             } else {
-                navigate("/student/profile");
+
+                navigate("/");
+
             }
         }
     }
@@ -65,7 +76,12 @@ const LoginPage = () => {
 
                 <button className='submit-button' type='submit'>Log In</button>
 
-                <a className='forget-pass' href="/forgot-password" >Forgot password?</a>
+                <Link
+                    className="forget-pass"
+                    to="/forgot-password"
+                >
+                    Forgot password?
+                </Link>
 
                 <div className="divider">
                     <hr />

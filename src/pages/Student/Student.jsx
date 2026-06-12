@@ -225,7 +225,7 @@ const Student = () => {
                                         </div>
 
                                         <span>
-                                            {exp.start_date} - {exp.end_date || "Present"}
+                                                {exp.duration || "Present"}
                                         </span>
 
                                     </div>

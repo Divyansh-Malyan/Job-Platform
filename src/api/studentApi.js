@@ -19,3 +19,16 @@ export const getStudentById = async (studentId) => {
 
     return response.data;
 };
+
+export const updateStudentProfile = async (
+    userId,
+    profileData
+  ) => {
+  
+    const response = await axios.put(
+      `${API_URL}/students/profile/${userId}`,
+      profileData
+    );
+  
+    return response.data;
+  };

@@ -38,19 +38,45 @@ const useUserStore = create((set) => ({
 
     if (!user) return;
 
-    const { data: updatedProfile, error } = await supabase
-      .from("User")
-      .update(updatedData)
-      .eq("user_id", user.id)
-      .select()
-      .single();
+    const studentData = {
+      name: updatedData.name,
+      headline: updatedData.headline,
+      phone: updatedData.phone,
+      city: updatedData.city,
+      country: updatedData.country,
+      course: updatedData.course,
+      college: updatedData.college,
+      cgpa: updatedData.cgpa,
+      about: updatedData.bio,
+      github: updatedData.github,
+      linkedin: updatedData.linkedin,
+      portfolio: updatedData.portfolio,
+      leetcode: updatedData.leetcode,
+      open_to_work:
+        updatedData.openToWork === "true",
+      preferred_job_type:
+        updatedData.preferredJobType,
+      preferred_location:
+        updatedData.preferredLocation,
+      work_mode:
+        updatedData.workMode,
+    };
+
+    const { data: updatedProfile, error } =
+      await supabase
+        .from("Students")
+        .update(studentData)
+        .eq("user_student_id", user.id)
+        .select()
+        .single();
+
+    console.log(updatedProfile);
+    console.log(error);
 
     if (!error) {
       set({
         profile: updatedProfile,
       });
-    } else {
-      console.error("Profile update failed:", error.message);
     }
   },
 

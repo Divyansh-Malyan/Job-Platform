@@ -15,6 +15,7 @@ import Finence from "../../assets/Finence.svg";
 import Transport from "../../assets/Transport.svg";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import useUserStore from "../../store/userStore";
 
 
 const Home = () => {
@@ -41,18 +42,67 @@ const Home = () => {
     fetchJobs();
 
   }, []);
+
+  const profile =
+    useUserStore(
+      (state) => state.profile
+    );
+
   return (
     <div className="home">
 
       {/* HERO */}
       <section className="hero">
-        <h1>Find the Career You Deserve</h1>
-        <p>Discover internships, full-time roles, and opportunities from top companies.</p>
+        <h1>
+          {
+            profile?.role === "recruiter"
+              ? "Hire Top Talent Faster"
+              : "Find the Career You Deserve"
+          }
+        </h1>
 
-        <div className="hero-search">
-          <input type="text" placeholder="Search jobs, skills..." />
-          <Link to="/jobs" className="primary-btn">Search</Link>
-        </div>
+        <p>
+          {
+            profile?.role === "recruiter"
+              ? "Post jobs, manage applicants and build your dream team."
+              : "Discover internships, full-time roles, and opportunities from top companies."
+          }
+        </p>
+
+        {
+          profile?.role === "recruiter" ? (
+
+            <div className="hero-search">
+
+              <Link
+                to="/recruiterpost"
+                className="primary-btn"
+              >
+                Post Job
+              </Link>
+
+            </div>
+
+          ) : (
+
+            <div className="hero-search">
+
+              <input
+                type="text"
+                placeholder="Search jobs, skills..."
+              />
+
+              <Link
+                to="/jobs"
+                className="primary-btn"
+              >
+                Search Jobs
+              </Link>
+
+            </div>
+
+          )
+        }
       </section>
       <div className="trusted-wrapper">
         <div className="trusted-by">
@@ -81,7 +131,13 @@ const Home = () => {
 
         <div className="recent-header">
           <div>
-            <h2>Recent Jobs Available</h2>
+            <h2>
+              {
+                profile?.role === "recruiter"
+                  ? "Recently Posted Jobs"
+                  : "Recent Jobs Available"
+              }
+            </h2>
             <p>Find the latest opportunities from top companies.</p>
           </div>
 
@@ -238,72 +294,238 @@ const Home = () => {
 
       {/* FEATURES */}
       <section className="features">
-        <div className="feature-card">
-          <h3>Verified Employers</h3>
-          <p>Every company is reviewed before posting jobs.</p>
-        </div>
 
-        <div className="feature-card">
-          <h3>One Click Apply</h3>
-          <p>Apply to multiple roles quickly and efficiently.</p>
-        </div>
+        {
+          profile?.role === "recruiter" ? (
 
-        <div className="feature-card">
-          <h3>Smart Filters</h3>
-          <p>Filter by tech stack, salary, location and more.</p>
-        </div>
+            <>
 
-        <div className="feature-card">
-          <h3>Profile Visibility</h3>
-          <p>Let recruiters find you directly.</p>
-        </div>
+              <div className="feature-card">
+                <h3>Post Jobs Instantly</h3>
+                <p>
+                  Reach thousands of candidates in minutes.
+                </p>
+              </div>
+
+              <div className="feature-card">
+                <h3>Applicant Tracking</h3>
+                <p>
+                  Manage applications from one dashboard.
+                </p>
+              </div>
+
+              <div className="feature-card">
+                <h3>Candidate Profiles</h3>
+                <p>
+                  Review resumes, skills and experience easily.
+                </p>
+              </div>
+
+              <div className="feature-card">
+                <h3>Hiring Dashboard</h3>
+                <p>
+                  Track recruitment progress efficiently.
+                </p>
+              </div>
+
+            </>
+
+          ) : (
+
+            <>
+
+              <div className="feature-card">
+                <h3>Verified Employers</h3>
+                <p>
+                  Every company is reviewed before posting jobs.
+                </p>
+              </div>
+
+              <div className="feature-card">
+                <h3>One Click Apply</h3>
+                <p>
+                  Apply to multiple roles quickly and efficiently.
+                </p>
+              </div>
+
+              <div className="feature-card">
+                <h3>Smart Filters</h3>
+                <p>
+                  Filter by tech stack, salary, location and more.
+                </p>
+              </div>
+
+              <div className="feature-card">
+                <h3>Profile Visibility</h3>
+                <p>
+                  Let recruiters find you directly.
+                </p>
+              </div>
+
+            </>
+
+          )
+        }
+
       </section>
 
       {/* HOW IT WORKS */}
       <section className="how-it-works">
         <h2>How It Works</h2>
         <div className="steps">
-          <div>
-            <h3>1. Create Profile</h3>
-            <p>Build your student profile and showcase your skills.</p>
-          </div>
-          <div>
-            <h3>2. Explore Jobs</h3>
-            <p>Browse opportunities that match your interests.</p>
-          </div>
-          <div>
-            <h3>3. Apply & Get Hired</h3>
-            <p>Submit applications and track progress easily.</p>
-          </div>
+
+          {
+            profile?.role === "recruiter" ? (
+
+              <>
+
+                <div>
+                  <h3>
+                    1. Create Company Profile
+                  </h3>
+
+                  <p>
+                    Build trust with candidates.
+                  </p>
+                </div>
+
+                <div>
+                  <h3>
+                    2. Post Jobs
+                  </h3>
+
+                  <p>
+                    Reach qualified talent instantly.
+                  </p>
+                </div>
+
+                <div>
+                  <h3>
+                    3. Hire Candidates
+                  </h3>
+
+                  <p>
+                    Review applications and make offers.
+                  </p>
+                </div>
+
+              </>
+
+            ) : (
+
+              <>
+
+                <div>
+                  <h3>
+                    1. Create Profile
+                  </h3>
+
+                  <p>
+                    Build your student profile and showcase your skills.
+                  </p>
+                </div>
+
+                <div>
+                  <h3>
+                    2. Explore Jobs
+                  </h3>
+
+                  <p>
+                    Browse opportunities that match your interests.
+                  </p>
+                </div>
+
+                <div>
+                  <h3>
+                    3. Apply & Get Hired
+                  </h3>
+
+                  <p>
+                    Submit applications and track progress easily.
+                  </p>
+                </div>
+
+              </>
+
+            )
+          }
+
         </div>
       </section>
 
       {/* CTA BANNER */}
-      <section className="career-banner">
+      {
+        profile?.role !== "recruiter" && (
 
-        <div className="banner-content">
+          <section className="career-banner">
 
-          <div className="banner-left">
-            <h2>
-              Create A Better <br />
-              Future For Yourself
-            </h2>
+            <div className="banner-content">
 
-            <p>
-              Discover top opportunities, connect with recruiters,
-              and build a successful career with Hustler.
-            </p>
+              <div className="banner-left">
 
-            <Link to="/jobs" className="banner-btn">
-              Search Job
-            </Link>
-          </div>
+                <h2>
+                  Create A Better <br />
+                  Future For Yourself
+                </h2>
 
-          <div className="banner-right"></div>
+                <p>
+                  Discover top opportunities, connect with recruiters,
+                  and build a successful career with Hustler.
+                </p>
 
-        </div>
+                <Link
+                  to="/jobs"
+                  className="banner-btn"
+                >
+                  Search Job
+                </Link>
 
-      </section>
+              </div>
+
+              <div className="banner-right"></div>
+
+            </div>
+
+          </section>
+
+        )
+      }
+
+      {
+        profile?.role === "recruiter" && (
+
+          <section className="career-banner">
+
+            <div className="banner-content">
+
+              <div className="banner-left">
+
+                <h2>
+                  Find Your Next <br />
+                  Great Hire
+                </h2>
+
+                <p>
+                  Post jobs, review applicants and grow your team with Hustler.
+                </p>
+
+                <Link
+                  to="/recruiterpost"
+                  className="banner-btn"
+                >
+                  Post Job
+                </Link>
+
+              </div>
+
+              <div className="banner-right"></div>
+
+            </div>
+
+          </section>
+
+        )
+      }
 
       {/* FOOTER */}
       <footer className="footer">

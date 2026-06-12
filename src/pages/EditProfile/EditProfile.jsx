@@ -2,13 +2,21 @@ import React, { useState } from "react";
 import "./EditProfile.css";
 import useUserStore from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
+import {
+  getStudentProfile,
+  updateStudentProfile
+} from "../../api/studentApi";
 
 const EditProfile = () => {
+
+  const user = useUserStore((state) => state.user);
+  const [profilePhoto, setProfilePhoto] = useState(null);
 
   const navigate = useNavigate();
 
   const profile = useUserStore((state) => state.profile);
-  const updateProfile = useUserStore((state) => state.updateProfile);
+  // const updateProfile = useUserStore((state) => state.updateProfile);
+
 
   const [formData, setFormData] = useState({
 
@@ -155,9 +163,20 @@ const EditProfile = () => {
 
   const handleSubmit = async () => {
 
-    await updateProfile(formData);
+    try {
 
-    navigate("/student/profile");
+      await updateStudentProfile(
+        user.id,
+        formData
+      );
+
+      navigate("/student/profile");
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
   };
 
   return (
@@ -187,6 +206,9 @@ const EditProfile = () => {
           <input
             type="file"
             accept="image/*"
+            onChange={(e) =>
+              setProfilePhoto(e.target.files[0])
+            }
           />
 
           {/* BASIC */}
