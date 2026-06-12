@@ -15,8 +15,11 @@ import {
   Bookmark,
   CircleCheck,
 } from "lucide-react";
+import { API_URL } from "../../api/config";
+
 
 const JobDetail = () => {
+  const JOB_API = `${API_URL}/jobs`;
 
   const user = useUserStore((state) => state.user);
   const profile = useUserStore((state) => state.profile);
@@ -68,7 +71,7 @@ const JobDetail = () => {
       try {
 
         const response = await axios.get(
-          `http://localhost:8080/jobs/${id}`
+          `${JOB_API}/${id}`
         );
 
         const currentJob = response.data.job;
@@ -76,7 +79,7 @@ const JobDetail = () => {
         setJob(currentJob);
 
         const jobsResponse = await axios.get(
-          "http://localhost:8080/jobs"
+          `${JOB_API}`
         );
 
         const filteredJobs = jobsResponse.data.jobs

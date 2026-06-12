@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080";
+import { API_URL } from "./config";
 
 export const getRecruiterDashboard = async (recruiterId) => {
   const response = await fetch(

@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API_URL } from "./config";
 
-const API =
-    "http://localhost:8080/saved-jobs";
+const SAVED_JOB_API =
+    `${API_URL}/saved-jobs`;
 
 export const saveJob = async (
     studentId,
@@ -9,10 +10,13 @@ export const saveJob = async (
 ) => {
 
     const response =
-        await axios.post(API, {
-            student_id: studentId,
-            job_id: jobId
-        });
+        await axios.post(
+            SAVED_JOB_API,
+            {
+                student_id: studentId,
+                job_id: jobId
+            }
+        );
 
     return response.data;
 };
@@ -24,7 +28,7 @@ export const removeSavedJob = async (
 
     const response =
         await axios.delete(
-            `${API}/${studentId}/${jobId}`
+            `${SAVED_JOB_API}/${studentId}/${jobId}`
         );
 
     return response.data;
@@ -37,7 +41,7 @@ export const checkSavedJob = async (
 
     const response =
         await axios.get(
-            `${API}/check/${studentId}/${jobId}`
+            `${SAVED_JOB_API}/check/${studentId}/${jobId}`
         );
 
     return response.data;
@@ -49,7 +53,7 @@ export const getSavedJobs = async (
 
     const response =
         await axios.get(
-            `${API}/${studentId}`
+            `${SAVED_JOB_API}/${studentId}`
         );
 
     return response.data;

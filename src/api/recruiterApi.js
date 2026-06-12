@@ -1,12 +1,13 @@
 import axios from "axios";
+import { API_URL } from "./config";
+
+const RECRUITER_URL = `${API_URL}/recruiters`;
 
 export const getRecruiterProfile =
 async (id) => {
 
   const response =
-    await axios.get(
-      `http://localhost:8080/recruiters/${id}`
-    );
+    await axios.get(`${RECRUITER_URL}/${id}`);
 
   return response.data;
 };
@@ -16,7 +17,7 @@ async (id, data) => {
 
   const response =
     await axios.put(
-      `http://localhost:8080/recruiters/${id}`,
+      `${RECRUITER_URL}/${id}`,
       data
     );
 

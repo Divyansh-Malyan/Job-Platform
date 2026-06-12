@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_URL } from "./config";
 
 export const updateCompany =
 async (
@@ -8,7 +9,7 @@ async (
 
   const response =
     await axios.put(
-      `http://localhost:8080/companies/${companyId}`,
+      `${API_URL}/companies/${companyId}`,
       data
     );
 

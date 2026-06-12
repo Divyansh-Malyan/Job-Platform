@@ -1,28 +1,24 @@
-// api/notificationApi.js
-
 import axios from "axios";
-
-const API =
-    "http://localhost:8080/notifications";
+import { API_URL } from "./config";
 
 export const getNotifications =
-    async (userId) => {
+  async (userId) => {
 
-        const response =
-            await axios.get(
-                `${API}/${userId}`
-            );
+    const response =
+      await axios.get(
+        `${API_URL}/notifications/${userId}`
+      );
 
-        return response.data;
-    };
+    return response.data;
+  };
 
 export const markAllRead =
-    async (userId) => {
+  async (userId) => {
 
-        const response =
-            await axios.put(
-                `${API}/read-all/${userId}`
-            );
+    const response =
+      await axios.put(
+        `${API_URL}/notifications/read-all/${userId}`
+      );
 
-        return response.data;
-    };
+    return response.data;
+  };

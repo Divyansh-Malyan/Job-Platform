@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const API_URL = "http://localhost:8080";
+import { API_URL } from "./config";
 
 // Apply for a job
 export const applyJob = async (

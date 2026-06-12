@@ -16,6 +16,7 @@ import Transport from "../../assets/Transport.svg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import useUserStore from "../../store/userStore";
+import { API_URL } from "../../api/config";
 
 
 const Home = () => {
@@ -27,7 +28,7 @@ const Home = () => {
       try {
 
         const response = await axios.get(
-          "http://localhost:8080/jobs"
+          `${API_URL}/jobs`
         );
 
         setJobs(response.data.jobs.slice(0, 5));
