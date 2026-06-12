@@ -6,6 +6,7 @@ import McDonalds from "../../assets/Mcdi.svg";
 import Apple from "../../assets/Apple.svg";
 import { getJobs } from "../../api/jobApi";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../api/config";
 
 const JobPage = () => {
   const navigate = useNavigate();
