@@ -263,7 +263,7 @@ const Navbar = () => {
                         ) {
 
                           navigate(
-                            "/recruiterdashboard"
+                            "/recruiter-profile"
                           );
 
                         } else {

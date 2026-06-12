@@ -12,9 +12,6 @@ const Notifications = () => {
     const user = useUserStore((state) => state.user);
 const loading = useUserStore((state) => state.loading);
 
-console.log("User:", user);
-console.log("Loading:", loading);
-
 
     const [notifications, setNotifications] = useState([]);
     const [activeFilter, setActiveFilter] = useState("All");
@@ -38,8 +35,7 @@ console.log("Loading:", loading);
             const data = await getNotifications(
                 user.id
             );
-    
-            console.log("API Response:", data);
+
     
             setNotifications(
                 data.notifications || []
@@ -117,15 +113,6 @@ console.log("Loading:", loading);
             }
         );
 
-    console.log(
-        "Notifications State:",
-        notifications
-    );
-
-    console.log(
-        "Filtered Notifications:",
-        filteredNotifications
-    );
 
     useEffect(() => {
 

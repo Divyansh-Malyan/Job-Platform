@@ -229,8 +229,6 @@ const EditProfile = () => {
           data.publicUrl;
 
       }
-      console.log("PROFILE URL:", profilePhotoUrl);
-      console.log("RESUME URL:", resumeUrl);
       await updateStudentProfile(
         user.id,
         {

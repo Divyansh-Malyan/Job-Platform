@@ -116,7 +116,6 @@ const RecruiterPost = () => {
         website:
           data.company.website || "",
       });
-      console.log(data.company);
 
     } catch (error) {
 

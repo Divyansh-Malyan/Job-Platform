@@ -29,8 +29,6 @@ const ForgotPassword = () => {
                 }
             );
 
-        console.log("Reset Error:", error);
-
         setLoading(false);
 
         if (error) {

@@ -41,7 +41,6 @@ const SavedJobs = () => {
 
         useEffect(() => {
 
-            console.log("PROFILE:", profile);
         
             if (profile?.user_student_id) {
                 fetchSavedJobs();

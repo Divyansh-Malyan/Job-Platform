@@ -55,7 +55,6 @@ const signup = async (
     ]);
 
   if (userError) {
-    console.log("User Table Error:", userError);
 
     return {
       success: false,
@@ -77,7 +76,7 @@ const signup = async (
       ]);
 
     if (studentError) {
-      console.log("Student Error:", studentError);
+
 
       return {
         success: false,
@@ -106,7 +105,7 @@ const signup = async (
       .single();
 
     if (companyError) {
-      console.log("Company Error:", companyError);
+
 
       return {
         success: false,
@@ -127,7 +126,6 @@ const signup = async (
       ]);
 
     if (recruiterError) {
-      console.log("Recruiter Error:", recruiterError);
 
       return {
         success: false,

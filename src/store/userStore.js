@@ -125,8 +125,7 @@ const useUserStore = create((set) => ({
         .select()
         .single();
 
-    console.log(updatedProfile);
-    console.log(error);
+
 
     if (!error) {
       set({

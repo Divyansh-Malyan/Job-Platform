@@ -26,10 +26,6 @@ const ViewApplicants = () => {
             const data =
                 await getApplicantsByJob(jobId);
 
-            console.log(
-                "Applicants:",
-                data
-            );
 
             setApplicants(
                 data.applicants || []

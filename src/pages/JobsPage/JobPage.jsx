@@ -11,6 +11,12 @@ const JobPage = () => {
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [locationFilter, setLocationFilter] = useState("");
+  const [jobTypes, setJobTypes] = useState([]);
+  const [experienceLevels, setExperienceLevels] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [sortBy, setSortBy] = useState("latest");
 
   useEffect(() => {
 
@@ -36,10 +42,114 @@ const JobPage = () => {
 
   }, []);
 
+
+
+  const handleJobTypeChange = (type) => {
+    setJobTypes((prev) =>
+      prev.includes(type)
+        ? prev.filter((t) => t !== type)
+        : [...prev, type]
+    );
+  };
+
+  const handleExperienceChange = (level) => {
+    setExperienceLevels((prev) =>
+      prev.includes(level)
+        ? prev.filter((e) => e !== level)
+        : [...prev, level]
+    );
+  };
+
+  const filteredJobs = [...jobs]
+    .filter((job) => {
+
+      const matchesSearch =
+        !searchTerm ||
+        job.role
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        job.company_name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+
+      const matchesLocation =
+        !selectedLocation ||
+        job.location_job
+          ?.toLowerCase()
+          .trim() ===
+        selectedLocation
+          .toLowerCase()
+          .trim();
+
+      const matchesJobType =
+        jobTypes.length === 0 ||
+        jobTypes.includes(job.job_type);
+
+      const matchesExperience =
+        experienceLevels.length === 0 ||
+        experienceLevels.includes(job.exp_required);
+
+      return (
+        matchesSearch &&
+        matchesLocation &&
+        matchesJobType &&
+        matchesExperience
+      );
+
+    })
+    .sort((a, b) => {
+
+      switch (sortBy) {
+
+        case "latest":
+          return (
+            new Date(b.created_at) -
+            new Date(a.created_at)
+          );
+
+        case "oldest":
+          return (
+            new Date(a.created_at) -
+            new Date(b.created_at)
+          );
+
+        case "company":
+          return (a.company_name || "")
+            .toLowerCase()
+            .localeCompare(
+              (b.company_name || "").toLowerCase()
+            );
+
+        case "salary-high":
+          return (
+            parseInt(
+              String(b.salary).replace(/\D/g, "")
+            ) -
+            parseInt(
+              String(a.salary).replace(/\D/g, "")
+            )
+          );
+
+        case "salary-low":
+          return (
+            parseInt(
+              String(a.salary).replace(/\D/g, "")
+            ) -
+            parseInt(
+              String(b.salary).replace(/\D/g, "")
+            )
+          );
+
+        default:
+          return 0;
+
+      }
+
+    });
+
   if (loading) {
     return <h2>Loading Jobs...</h2>;
   }
-  console.log(jobs);
 
   return (
     <div className="jobs-page">
@@ -61,44 +171,114 @@ const JobPage = () => {
             type="text"
             placeholder="Job title or company"
             className="search-input"
+            value={searchTerm}
+            onChange={(e) =>
+              setSearchTerm(e.target.value)
+            }
           />
 
           <div className="filter-section">
             <h4>Location</h4>
 
-            <select>
-              <option>Choose city</option>
-              <option>Delhi</option>
-              <option>Bangalore</option>
-              <option>Mumbai</option>
+            <select
+              value={selectedLocation}
+              onChange={(e) =>
+                setSelectedLocation(e.target.value)
+              }
+            >
+              {[
+                ...new Set(
+                  jobs.map((job) => job.location_job)
+                )
+              ].map((city) => (
+                <option
+                  key={city}
+                  value={city}
+                >
+                  {city}
+                </option>
+              ))}
             </select>
-          </div>
-
-          <div className="filter-section">
-            <h4>Category</h4>
-
-            <label><input type="checkbox" /> Commerce</label>
-            <label><input type="checkbox" /> Telecommunications</label>
-            <label><input type="checkbox" /> Hotels & Tourism</label>
-            <label><input type="checkbox" /> Education</label>
-            <label><input type="checkbox" /> Financial Services</label>
           </div>
 
           <div className="filter-section">
             <h4>Job Type</h4>
 
-            <label><input type="checkbox" /> Full Time</label>
-            <label><input type="checkbox" /> Part Time</label>
-            <label><input type="checkbox" /> Freelance</label>
-            <label><input type="checkbox" /> Internship</label>
+            <label>
+              <input
+                type="checkbox"
+                checked={jobTypes.includes("Full Time")}
+                onChange={() =>
+                  handleJobTypeChange("Full Time")
+                }
+              />
+              Full Time
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={jobTypes.includes("Part Time")}
+                onChange={() =>
+                  handleJobTypeChange("Part Time")
+                }
+              />
+              Part Time
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={jobTypes.includes("Internship")}
+                onChange={() =>
+                  handleJobTypeChange("Internship")
+                }
+              />
+              Internship
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={jobTypes.includes("Freelance")}
+                onChange={() =>
+                  handleJobTypeChange("Freelance")
+                }
+              />
+              Freelance
+            </label>
           </div>
 
           <div className="filter-section">
             <h4>Experience Level</h4>
 
-            <label><input type="checkbox" /> Fresher</label>
-            <label><input type="checkbox" /> Intermediate</label>
-            <label><input type="checkbox" /> Expert</label>
+            <label>
+              <input
+                type="checkbox"
+                checked={experienceLevels.includes("Fresher")}
+                onChange={() =>
+                  handleExperienceChange("Fresher")
+                }
+              />
+              Fresher
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={experienceLevels.includes("Intermediate")}
+                onChange={() =>
+                  handleExperienceChange("Intermediate")
+                }
+              />
+              Intermediate
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={experienceLevels.includes("Expert")}
+                onChange={() =>
+                  handleExperienceChange("Expert")
+                }
+              />
+              Expert
+            </label>
           </div>
 
         </aside>
@@ -108,11 +288,36 @@ const JobPage = () => {
 
           <div className="jobs-topbar">
 
-            <p>Showing 6-6 of 10 results</p>
+            <p>
+              Showing {filteredJobs.length} jobs
+            </p>
 
-            <select className="sort-select">
-              <option>Sort by latest</option>
-              <option>Oldest</option>
+            <select
+              className="sort-select"
+              value={sortBy}
+              onChange={(e) =>
+                setSortBy(e.target.value)
+              }
+            >
+              <option value="latest">
+                Latest First
+              </option>
+
+              <option value="oldest">
+                Oldest First
+              </option>
+
+              <option value="company">
+                Company Name A-Z
+              </option>
+
+              <option value="salary-high">
+                Salary High-Low
+              </option>
+
+              <option value="salary-low">
+                Salary Low-High
+              </option>
             </select>
 
           </div>
@@ -121,7 +326,7 @@ const JobPage = () => {
 
           <div className="jobs-list">
 
-            {jobs.map((job) => (
+            {filteredJobs.map((job) => (
 
               <div className="job-card" key={job.id}>
 
@@ -136,8 +341,11 @@ const JobPage = () => {
                   <div className="job-info">
 
                     <img
-                      src="https://cdn-icons-png.flaticon.com/512/5969/5969120.png"
-                      alt=""
+                      src={
+                        job.logo_url ||
+                        "https://cdn-icons-png.flaticon.com/512/5969/5969120.png"
+                      }
+                      alt={job.company_name}
                       className="job-logo"
                     />
 

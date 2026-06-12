@@ -1,0 +1,324 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .recruiter-profile-page {
+    min-height: 100vh;
+    background: #f5f5f5;
+  }
+  
+  /* ==========================
+     HERO
+  ========================== */
+  
+  .recruiter-profile-hero {
+    background: #000;
+    color: white;
+  
+    text-align: center;
+  
+    padding: 100px 20px 80px;
+  }
+  
+  .company-logo {
+    width: 110px;
+    height: 110px;
+  
+    object-fit: contain;
+  
+    background: white;
+  
+    border-radius: 24px;
+  
+    padding: 16px;
+  
+    margin-bottom: 24px;
+  }
+  
+  .recruiter-profile-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 12px;
+  }
+  
+  .recruiter-profile-hero h3 {
+    color: #35b0a7;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+  
+  .recruiter-profile-hero h2 {
+    font-size: 2rem;
+    margin-bottom: 12px;
+  }
+  
+  .recruiter-profile-hero p {
+    color: #cfcfcf;
+    margin-bottom: 30px;
+  }
+  
+  /* ==========================
+     ACTIONS
+  ========================== */
+  
+  .hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  
+  .primary-btn {
+    background: #35b0a7;
+    color: white;
+  
+    border: none;
+  
+    padding: 14px 24px;
+  
+    border-radius: 12px;
+  
+    cursor: pointer;
+  
+    font-weight: 600;
+  
+    transition: .3s;
+  }
+  
+  .primary-btn:hover {
+    transform: translateY(-2px);
+  }
+  
+  .secondary-btn {
+    background: transparent;
+  
+    color: #35b0a7;
+  
+    border: 2px solid #35b0a7;
+  
+    padding: 14px 24px;
+  
+    border-radius: 12px;
+  
+    cursor: pointer;
+  
+    font-weight: 600;
+  
+    transition: .3s;
+  }
+  
+  .secondary-btn:hover {
+    background: #35b0a7;
+  }
+  
+  /* ==========================
+     CONTAINER
+  ========================== */
+  
+  .recruiter-profile-container {
+    max-width: 1300px;
+  
+    margin: auto;
+  
+    padding: 60px 7%;
+  }
+  
+  /* ==========================
+     CARDS
+  ========================== */
+  
+  .profile-card {
+    background: white;
+  
+    border-radius: 24px;
+  
+    padding: 32px;
+  
+    margin-bottom: 24px;
+  
+    box-shadow:
+      0 5px 20px rgba(0, 0, 0, .04);
+  }
+  
+  .profile-card h2 {
+    font-size: 1.8rem;
+    color: #111;
+  }
+  
+  /* ==========================
+     CARD HEADER
+  ========================== */
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    margin-bottom: 28px;
+  }
+  
+  .edit-btn {
+    background: #35b0a7;
+  
+    color: white;
+  
+    border: none;
+  
+    padding: 12px 18px;
+  
+    border-radius: 10px;
+  
+    cursor: pointer;
+  
+    font-weight: 600;
+  
+    transition: .3s;
+  }
+  
+  .edit-btn:hover {
+    opacity: .9;
+  }
+  
+  /* ==========================
+     INFO GRID
+  ========================== */
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  
+    gap: 28px;
+  }
+  
+  .info-grid small {
+    display: block;
+  
+    color: #888;
+  
+    margin-bottom: 8px;
+  
+    font-size: .85rem;
+  }
+  
+  .info-grid h4 {
+    color: #111;
+    font-size: 1rem;
+  }
+  
+  .info-grid a {
+    text-decoration: none;
+  
+    color: #35b0a7;
+  
+    font-weight: 600;
+  }
+  
+  .info-grid a:hover {
+    text-decoration: underline;
+  }
+  
+  /* ==========================
+     DESCRIPTION
+  ========================== */
+  
+  .company-description {
+    color: #555;
+  
+    line-height: 1.8;
+  
+    font-size: 1rem;
+  }
+  
+  /* ==========================
+     BRANDING
+  ========================== */
+  
+  .branding-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    background: #fafafa;
+  
+    border-radius: 20px;
+  
+    padding: 40px;
+  }
+  
+  .branding-logo {
+    width: 180px;
+    height: 180px;
+  
+    object-fit: contain;
+  }
+  
+  /* ==========================
+     RESPONSIVE
+  ========================== */
+  
+  @media (max-width: 992px) {
+  
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .section-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+  
+    .recruiter-profile-hero h1 {
+      font-size: 2.8rem;
+    }
+  
+    .recruiter-profile-hero h2 {
+      font-size: 1.6rem;
+    }
+  
+    .hero-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+  
+    .hero-actions button {
+      width: 100%;
+    }
+  
+    .recruiter-profile-container {
+      padding: 40px 5%;
+    }
+  
+    .profile-card {
+      padding: 24px;
+    }
+  }
+  
+  @media (max-width: 600px) {
+  
+    .company-logo {
+      width: 90px;
+      height: 90px;
+    }
+  
+    .recruiter-profile-hero {
+      padding: 80px 20px 60px;
+    }
+  
+    .recruiter-profile-hero h1 {
+      font-size: 2.3rem;
+    }
+  
+    .profile-card h2 {
+      font-size: 1.4rem;
+    }
+  
+    .branding-logo {
+      width: 120px;
+      height: 120px;
+    }
+  }

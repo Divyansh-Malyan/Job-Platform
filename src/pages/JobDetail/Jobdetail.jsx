@@ -21,7 +21,6 @@ const JobDetail = () => {
   const user = useUserStore((state) => state.user);
   const profile = useUserStore((state) => state.profile);
   const { id } = useParams();
-  console.log("Job ID from URL:", id);
   const [job, setJob] = useState(null);
   const [applied, setApplied] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -35,7 +34,6 @@ const JobDetail = () => {
       </div>
     );
   }
-  console.log(profile);
 
   useEffect(() => {
 
@@ -175,8 +173,6 @@ const JobDetail = () => {
     return <h2>Loading...</h2>;
   }
 
-  console.log("User:", user);
-  console.log("Profile:", profile);
 
   const handleApply = async () => {
 
@@ -336,8 +332,11 @@ const JobDetail = () => {
             <div className="job-title-row">
 
               <img
-                src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
-                alt="company"
+                src={
+                  job.logo_url ||
+                  "https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
+                }
+                alt={job.company_name}
               />
 
               <div>
@@ -504,8 +503,11 @@ const JobDetail = () => {
                   <div className="related-title">
 
                     <img
-                      src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
-                      alt="company"
+                      src={
+                        relatedJob.logo_url ||
+                        "https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
+                      }
+                      alt={relatedJob.company_name}
                     />
 
                     <div>

@@ -27,6 +27,11 @@ import ForgotPassword
   from "./pages/ForgotPassword/ForgotPassword";
 import ResetPassword
   from "./pages/ResetPassword/ResetPassword";
+import RecruiterProfile
+  from "./pages/RecruiterProfile/RecruiterProfile";
+
+import EditRecruiterCompany
+  from "./pages/EditRecruiterCompany/EditRecruiterCompany";
 
 
 
@@ -72,6 +77,15 @@ const App = () => {
             <Route
               path="/student/:studentId"
               element={<StudentView />}
+            />
+            <Route
+              path="/recruiter-profile"
+              element={<RecruiterProfile />}
+            />
+
+            <Route
+              path="/edit-recruiter-company"
+              element={<EditRecruiterCompany />}
             />
 
 

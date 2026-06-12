@@ -163,8 +163,11 @@ const Home = () => {
 
                 <img
                   className="job-logo"
-                  src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
-                  alt="company-logo"
+                  src={
+                    job.logo_url ||
+                    "https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
+                  }
+                  alt={job.company_name}
                 />
 
                 <div>
