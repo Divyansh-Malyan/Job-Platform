@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./JobPage.css";
 import Instagram from "../../assets/insta.svg";
 import Tesla from "../../assets/tesla.svg";
-import McDonalds from "../../assets/mcdi.svg";
+import McDonalds from "../../assets/Mcdi.svg";
 import Apple from "../../assets/apple.svg";
 import { getJobs } from "../../api/jobApi";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ const JobPage = () => {
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [locationFilter, setLocationFilter] = useState("");
+  // const [locationFilter, setLocationFilter] = useState("");
   const [jobTypes, setJobTypes] = useState([]);
   const [experienceLevels, setExperienceLevels] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -186,18 +186,16 @@ const JobPage = () => {
                 setSelectedLocation(e.target.value)
               }
             >
-              {[
-                ...new Set(
-                  jobs.map((job) => job.location_job)
-                )
-              ].map((city) => (
-                <option
-                  key={city}
-                  value={city}
-                >
-                  {city}
-                </option>
-              ))}
+              <option value="">
+                All Cities
+              </option>
+
+              {[...new Set(jobs.map(job => job.location_job))]
+                .map(city => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
             </select>
           </div>
 
