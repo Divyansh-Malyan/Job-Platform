@@ -22,19 +22,18 @@ const JobPage = () => {
 
     const fetchJobs = async () => {
       try {
+        console.log("API_URL =", API_URL);
 
         const data = await getJobs();
+
+        console.log("Jobs API Response =", data);
 
         setJobs(data.jobs);
 
       } catch (error) {
-
-        console.error(error);
-
+        console.error("Jobs Error:", error);
       } finally {
-
         setLoading(false);
-
       }
     };
 
