@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import "./JobDetail.css";
+import "./Jobdetail.css";
 import { applyJob, checkApplied } from "../../api/applicationApi";
 import useUserStore from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
