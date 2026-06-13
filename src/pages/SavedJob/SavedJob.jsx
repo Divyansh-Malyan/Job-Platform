@@ -39,16 +39,16 @@ const SavedJobs = () => {
     const [filter, setFilter] =
         useState("All");
 
-        useEffect(() => {
+    useEffect(() => {
 
-        
-            if (profile?.user_student_id) {
-                fetchSavedJobs();
-            } else {
-                setLoading(false);
-            }
-        
-        }, [profile]);
+
+        if (profile?.user_student_id) {
+            fetchSavedJobs();
+        } else {
+            setLoading(false);
+        }
+
+    }, [profile]);
 
     const fetchSavedJobs =
         async () => {
@@ -264,8 +264,11 @@ const SavedJobs = () => {
                                             <div className="job-header">
 
                                                 <img
-                                                    src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
-                                                    alt="company"
+                                                    src={
+                                                        job.logo_url ||
+                                                        "https://cdn-icons-png.flaticon.com/512/5968/5968705.png"
+                                                    }
+                                                    alt={job.company_name}
                                                     className="company-logo"
                                                 />
 
