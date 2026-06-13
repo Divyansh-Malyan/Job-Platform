@@ -263,3 +263,99 @@
   }
 
 }
+
+
+.mobile-menu {
+  position: fixed;
+  top: 72px;
+  left: 0;
+
+  width: 100%;
+  height: calc(100vh - 72px);
+
+  overflow-y: auto;
+
+  background: #111;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 24px;
+
+  gap: 20px;
+
+  z-index: 2000;
+
+  border-top: 1px solid #222;
+}
+
+.mobile-menu a,
+.mobile-menu button {
+  color: white;
+  background: none;
+  border: none;
+  text-decoration: none;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  padding: 12px 0;
+}
+
+.mobile-menu a:hover,
+.mobile-menu button:hover {
+  color: #35b0a7;
+}
+
+@media (max-width: 768px) {
+
+  .navbar {
+    padding: 16px 20px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .auth-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+
+  .notification-link,
+  .profile-dropdown,
+  .login-btn,
+  .register-btn {
+    display: none;
+  }
+}
+
+.mobile-menu-btn {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+  color: white;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+
+  .auth-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+
+}

@@ -8,22 +8,20 @@ import toast from "react-hot-toast";
 import { IoIosNotifications } from "react-icons/io";
 import { getNotifications }
   from "../../api/notificationApi";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
-  const [notificationCount, setNotificationCount] =
-    useState(0);
 
+  const [notificationCount, setNotificationCount] = useState(0);
+  const location = useLocation();
   const user = useUserStore((state) => state.user);
   const profile = useUserStore((state) => state.profile);
   const clearUser = useUserStore((state) => state.clearUser);
-
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-
-
-
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -114,6 +112,10 @@ const Navbar = () => {
 
   }, [user]);
 
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
 
   return (
 
@@ -121,9 +123,9 @@ const Navbar = () => {
 
       {/* Logo */}
 
-      <div className="logo">
+      <Link to="/" className="logo">
         <h2>Hustler</h2>
-      </div>
+      </Link>
 
       {/* Navigation */}
 
@@ -183,6 +185,19 @@ const Navbar = () => {
       {/* Right Side */}
 
       <div className="auth-section">
+
+        {/* Mobile Hamburger */}
+
+        <div
+          className="mobile-menu-btn"
+          onClick={() =>
+            setMobileMenuOpen(!mobileMenuOpen)
+          }
+        >
+          {mobileMenuOpen
+            ? <FaTimes />
+            : <FaBars />}
+        </div>
 
         {!user ? (
 
@@ -346,6 +361,158 @@ const Navbar = () => {
         )}
 
       </div>
+
+      {
+        mobileMenuOpen && (
+
+          <div className="mobile-menu">
+
+            <NavLink
+              to="/"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </NavLink>
+
+            {
+              profile?.role === "recruiter" ? (
+                <>
+                  <NavLink
+                    to="/recruiterpost"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Post Job
+                  </NavLink>
+
+                  <NavLink
+                    to="/manage-jobs"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Manage Jobs
+                  </NavLink>
+                </>
+              ) : (
+                <NavLink
+                  to="/jobs"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Jobs
+                </NavLink>
+              )
+            }
+
+            <NavLink
+              to="/about"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              About Us
+            </NavLink>
+
+            <NavLink
+              to="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contact Us
+            </NavLink>
+
+            {
+              user && (
+                <>
+                  <NavLink
+                    to="/notifications"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Notifications
+                    {
+                      notificationCount > 0 &&
+                      ` (${notificationCount})`
+                    }
+                  </NavLink>
+
+                  <button
+                    onClick={() => {
+
+                      if (
+                        profile?.role === "recruiter"
+                      ) {
+                        navigate(
+                          "/recruiter-profile"
+                        );
+                      } else {
+                        navigate(
+                          "/student/profile"
+                        );
+                      }
+
+                      setMobileMenuOpen(false);
+
+                    }}
+                  >
+                    My Profile
+                  </button>
+
+                  {
+                    profile?.role !== "recruiter" && (
+                      <button
+                        onClick={() => {
+                          navigate("/saved-jobs");
+                          setMobileMenuOpen(false);
+                        }}
+                      >
+                        Saved Jobs
+                      </button>
+                    )
+                  }
+
+                  <button
+                    onClick={() => {
+                      navigate("/settings");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Settings
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleLogout();
+                    }}
+                  >
+                    Logout
+                  </button>
+                </>
+              )
+            }
+
+            {
+              !user && (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() =>
+                      setMobileMenuOpen(false)
+                    }
+                  >
+                    Login
+                  </Link>
+
+                  <Link
+                    to="/sign-up"
+                    onClick={() =>
+                      setMobileMenuOpen(false)
+                    }
+                  >
+                    Register
+                  </Link>
+                </>
+              )
+            }
+
+          </div>
+
+        )
+      }
 
     </nav>
 

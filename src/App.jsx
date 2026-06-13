@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import ScrollToTop from "./components/ScrollToTop";
 import LoginPage from './pages/LoginPage/LoginPage';
 import SignUp from './pages/SignUp/SignUp';
 import Student from './pages/Student/Student';
@@ -48,6 +49,9 @@ const App = () => {
     <>
       <Toaster position="top-right" />
       <BrowserRouter>
+
+        <ScrollToTop />
+
         <Routes>
           {/* With navbar */}
 
