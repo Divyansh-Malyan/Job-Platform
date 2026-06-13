@@ -1,21 +1,10 @@
-import React, {
-    useEffect,
-    useState
-} from "react";
-
+import React, { useEffect, useState } from "react";
 import "./SavedJob.css";
+import { useNavigate } from "react-router-dom";
+import useUserStore from "../../store/userStore";
+import { getSavedJobs, removeSavedJob } from "../../api/savedJobApi";
+import { Ripple } from "react-loading-indicators";
 
-import {
-    useNavigate
-} from "react-router-dom";
-
-import useUserStore
-    from "../../store/userStore";
-
-import {
-    getSavedJobs,
-    removeSavedJob
-} from "../../api/savedJobApi";
 
 const SavedJobs = () => {
 
@@ -129,9 +118,14 @@ const SavedJobs = () => {
 
     if (loading) {
         return (
-            <h2>
-                Loading Saved Jobs...
-            </h2>
+            <div className="jobs-loader">
+                <Ripple
+                    color="#35b0a7"
+                    size="medium"
+                    text="Loading jobs..."
+                    textColor="#666"
+                />
+            </div>
         );
     }
 

@@ -4,6 +4,7 @@ import { data, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { getRecruiterJobs, closeJob, deleteJob } from "../../api/jobApi";
 import useUserStore from "../../store/userStore";
+import { Ripple } from "react-loading-indicators";
 
 const ManageJobs = () => {
 
@@ -65,7 +66,16 @@ const ManageJobs = () => {
     };
 
     if (loading) {
-        return <h2>Loading jobs...</h2>;
+        return (
+            <div className="jobs-loader">
+                <Ripple
+                    color="#35b0a7"
+                    size="medium"
+                    text="Loading jobs..."
+                    textColor="#666"
+                />
+            </div>
+        );
     }
 
     const handleCloseJob = async (jobId) => {

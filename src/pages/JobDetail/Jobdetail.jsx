@@ -6,21 +6,14 @@ import { applyJob, checkApplied } from "../../api/applicationApi";
 import useUserStore from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
 import { saveJob, removeSavedJob, checkSavedJob } from "../../api/savedJobApi";
-
-import {
-  BriefcaseBusiness,
-  Clock3,
-  Wallet,
-  MapPin,
-  Bookmark,
-  CircleCheck,
-} from "lucide-react";
+import { Clock3, Wallet, MapPin, Bookmark, CircleCheck, } from "lucide-react";
 import { API_URL } from "../../api/config";
+import { Ripple } from "react-loading-indicators";
 
 
 const JobDetail = () => {
   const JOB_API = `${API_URL}/jobs`;
-
+  const [loading, setLoading] = useState(true);
   const user = useUserStore((state) => state.user);
   const profile = useUserStore((state) => state.profile);
   const { id } = useParams();
@@ -69,6 +62,9 @@ const JobDetail = () => {
     const fetchJob = async () => {
 
       try {
+
+        setLoading(true);
+        setJob(null);
 
         const response = await axios.get(
           `${JOB_API}/${id}`
@@ -135,6 +131,10 @@ const JobDetail = () => {
 
         console.error(error);
 
+      } finally {
+
+        setLoading(false);
+
       }
     };
 
@@ -171,10 +171,6 @@ const JobDetail = () => {
     checkSaved();
 
   }, [profile, job]);
-
-  if (!job) {
-    return <h2>Loading...</h2>;
-  }
 
 
   const handleApply = async () => {
@@ -291,6 +287,23 @@ const JobDetail = () => {
     return "Just now";
   };
 
+  if (loading) {
+    return (
+      <div className="jobs-loader">
+        <Ripple
+          color="#35b0a7"
+          size="medium"
+          text="Loading job details..."
+          textColor="#666"
+        />
+      </div>
+    );
+  }
+
+  if (!job) {
+    return <h2>No Job Found</h2>;
+  }
+
   return (
     <div className="job-detail-page">
 
@@ -352,9 +365,9 @@ const JobDetail = () => {
             <div className="job-meta">
 
               {/* <div className="meta-item">
-                <BriefcaseBusiness size={18} />
-                <span>Commerce</span>
-              </div> */}
+                  <BriefcaseBusiness size={18} />
+                  <span>Commerce</span>
+                </div> */}
 
               <div className="meta-item">
                 <Clock3 size={18} />

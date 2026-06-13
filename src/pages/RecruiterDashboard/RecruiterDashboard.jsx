@@ -3,6 +3,7 @@ import "./RecruiterDashboard.css";
 import useUserStore from "../../store/userStore";
 import { getRecruiterDashboard } from "../../api/dashboardApi";
 import { useNavigate } from "react-router-dom";
+import { Ripple } from "react-loading-indicators";
 
 const RecruiterDashboard = () => {
 
@@ -49,7 +50,16 @@ const RecruiterDashboard = () => {
   }, [user]);
 
   if (loading) {
-    return <h2>Loading Dashboard...</h2>;
+    return (
+      <div className="jobs-loader">
+        <Ripple
+          color="#35b0a7"
+          size="medium"
+          text="Loading jobs..."
+          textColor="#666"
+        />
+      </div>
+    );
   }
 
   if (!dashboardData) {

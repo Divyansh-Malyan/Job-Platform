@@ -7,6 +7,7 @@ import Apple from "../../assets/Apple.svg";
 import { getJobs } from "../../api/jobApi";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../api/config";
+import { Ripple } from "react-loading-indicators";
 
 const JobPage = () => {
   const navigate = useNavigate();
@@ -148,7 +149,16 @@ const JobPage = () => {
     });
 
   if (loading) {
-    return <h2>Loading Jobs...</h2>;
+    return (
+      <div className="jobs-loader">
+        <Ripple
+          color="#35b0a7"
+          size="medium"
+          text="Loading jobs..."
+          textColor="#666"
+        />
+      </div>
+    );
   }
 
   return (

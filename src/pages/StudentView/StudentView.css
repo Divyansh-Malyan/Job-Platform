@@ -478,3 +478,13 @@
       font-size: 1.5rem;
     }
   }
+
+  .jobs-loader {
+    min-height: calc(100vh - 80px);
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    background: #f8f9fa;
+  }

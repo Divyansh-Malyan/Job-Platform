@@ -1,28 +1,11 @@
-import React, {
-    useEffect,
-    useState
-} from "react";
-
+import React, {useEffect, useState} from "react";
 import "./EditRecruiterCompany.css";
-
 import toast from "react-hot-toast";
-
-import useUserStore
-    from "../../store/userStore";
-
-import {
-    uploadRecruiterPhoto,
-    uploadCompanyLogo
-} from "../../utils/uploadFiles";
-
-import {
-    getRecruiterProfile,
-    updateRecruiter
-} from "../../api/recruiterApi";
-
-import {
-    updateCompany
-} from "../../api/companyApi";
+import useUserStore from "../../store/userStore";
+import {uploadRecruiterPhoto, uploadCompanyLogo} from "../../utils/uploadFiles";
+import {getRecruiterProfile, updateRecruiter} from "../../api/recruiterApi";
+import {updateCompany} from "../../api/companyApi";
+import { Ripple } from "react-loading-indicators";
 
 const EditRecruiterCompany = () => {
     const profile =
@@ -50,14 +33,14 @@ const EditRecruiterCompany = () => {
     useEffect(() => {
 
         if (!profile?.id) {
-    
+
             setLoading(false);
             return;
-    
+
         }
-    
+
         fetchProfile();
-    
+
     }, [profile]);
 
     const fetchProfile = async () => {
@@ -241,13 +224,16 @@ const EditRecruiterCompany = () => {
 
 
     if (loading) {
-
         return (
-            <h2>
-                Loading...
-            </h2>
+            <div className="jobs-loader">
+                <Ripple
+                    color="#35b0a7"
+                    size="medium"
+                    text="Loading jobs..."
+                    textColor="#666"
+                />
+            </div>
         );
-
     }
 
     return (
