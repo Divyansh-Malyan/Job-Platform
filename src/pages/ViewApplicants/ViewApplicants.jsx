@@ -3,7 +3,7 @@ import "./ViewApplicants.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { getApplicantsByJob } from "../../api/jobApi";
 import {updateApplicationStatus} from "../../api/applicationApi";
-import { Ripple } from "react-loading-indicators";
+import { Riple } from "react-loading-indicators";
 
 const ViewApplicants = () => {
     const navigate = useNavigate();
@@ -92,7 +92,7 @@ const ViewApplicants = () => {
     if (loading) {
         return (
             <div className="jobs-loader">
-                <Ripple
+                <Riple
                     color="#35b0a7"
                     size="medium"
                     text="Loading jobs..."

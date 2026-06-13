@@ -4,7 +4,7 @@ import ProfilePic from "../../assets/profile.jpg";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../../store/userStore";
 import { getStudentProfile } from "../../api/studentApi";
-import { Ripple } from "react-loading-indicators";
+import { Riple } from "react-loading-indicators";
 
 const Student = () => {
     const user = useUserStore((state) => state.user);
@@ -58,7 +58,7 @@ const Student = () => {
     if (loading) {
         return (
             <div className="jobs-loader">
-                <Ripple
+                <Riple
                     color="#35b0a7"
                     size="medium"
                     text="Loading jobs..."

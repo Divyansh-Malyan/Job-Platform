@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { saveJob, removeSavedJob, checkSavedJob } from "../../api/savedJobApi";
 import { Clock3, Wallet, MapPin, Bookmark, CircleCheck, } from "lucide-react";
 import { API_URL } from "../../api/config";
-import { Ripple } from "react-loading-indicators";
+import { Riple } from "react-loading-indicators";
 
 
 const JobDetail = () => {
@@ -290,7 +290,7 @@ const JobDetail = () => {
   if (loading) {
     return (
       <div className="jobs-loader">
-        <Ripple
+        <Riple
           color="#35b0a7"
           size="medium"
           text="Loading job details..."

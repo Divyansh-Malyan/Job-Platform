@@ -6,7 +6,7 @@ import DefaultProfile from "../../assets/profile.jpg";
 import { useEffect, useState } from "react";
 import useUserStore from "../../store/userStore";
 import { getRecruiterProfile } from "../../api/recruiterApi";
-import { Ripple } from "react-loading-indicators";
+import { Riple } from "react-loading-indicators";
 
 const RecruiterProfile = () => {
 
@@ -51,7 +51,7 @@ const RecruiterProfile = () => {
     if (loading) {
         return (
             <div className="jobs-loader">
-                <Ripple
+                <Riple
                     color="#35b0a7"
                     size="medium"
                     text="Loading jobs..."

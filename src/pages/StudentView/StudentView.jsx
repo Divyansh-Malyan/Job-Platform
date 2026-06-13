@@ -7,7 +7,7 @@ import {useParams} from "react-router-dom";
 import {getStudentById} from "../../api/studentApi";
 import { useLocation } from "react-router-dom";
 import {updateApplicationStatus} from "../../api/applicationApi";
-import { Ripple } from "react-loading-indicators";
+import { Riple } from "react-loading-indicators";
 
 const StudentView = () => {
 
@@ -65,7 +65,7 @@ const StudentView = () => {
     if (loading) {
         return (
             <div className="jobs-loader">
-                <Ripple
+                <Riple
                     color="#35b0a7"
                     size="medium"
                     text="Loading jobs..."
