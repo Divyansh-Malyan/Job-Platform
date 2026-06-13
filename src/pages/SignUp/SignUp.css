@@ -90,7 +90,7 @@ body {
    REDIRECT SECTION
 ========================= */
 
-.sign-up-redirect {
+.sign-up-redirect-m {
     display: block;
     margin-top: 20px;
     font-size: 12px;
@@ -307,3 +307,4 @@ body {
     }
 
 }
+

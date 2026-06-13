@@ -110,19 +110,19 @@ const SignUp = () => {
                     <hr />
                 </div>
 
-                <div className='social-login-buttons'>
+                {/* <div className='social-login-buttons'>
                     <button type="button" onClick={loginWithGoogle}>
                         <img src={google} alt="Google Icon" />
                         Google
                     </button>
 
-                    {/* <button type='button'>
+                    <button type='button'>
                         <img src={github} alt="Github Icon" />
                         Github
-                    </button> */}
-                </div>
+                    </button>
+                </div> */}
 
-                <section className='sign-up-redirect'>
+                <section className='sign-up-redirect-m'>
 
                     <section className='login-redirect'>
                         <p>Already have an account?</p>

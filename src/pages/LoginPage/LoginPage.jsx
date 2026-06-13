@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
 import google from '../../assets/google.svg';
-import github from '../../assets/github.svg';
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { login, loginWithGoogle } from '../../utils/Auth_Client'
 import toast from 'react-hot-toast';
@@ -89,13 +88,15 @@ const LoginPage = () => {
                     <span>or</span>
                     <hr />
                 </div>
+                <div className="google-login-note">
+                    <p>Student Login Only</p>
+                </div>
 
                 <div className='social-login-buttons'>
                     <button type="button" onClick={loginWithGoogle}>
                         <img src={google} alt="Google Icon" />
-                        Google
+                        Continue with Google
                     </button>
-                    {/* <button type='button'><img src={github} alt="Github Icon" /> Github</button> */}
                 </div>
 
                 <section className='sign-up-redirect'>
