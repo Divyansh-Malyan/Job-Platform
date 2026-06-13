@@ -8,6 +8,10 @@ body {
     width: 100%;
 }
 
+/* =========================
+   FORM SIDE
+========================= */
+
 .left-side-form {
     display: flex;
     width: 50%;
@@ -15,6 +19,7 @@ body {
     justify-content: center;
     padding: 60px 200px;
     background: white;
+    box-sizing: border-box;
 }
 
 .left-side-form h2 {
@@ -24,9 +29,9 @@ body {
 
 .left-side-form input {
     margin-bottom: 20px;
-    padding: 10px;
+    padding: 12px;
     border-radius: 8px;
-    font-size: 12px;
+    font-size: 14px;
     border: 1px solid #ccc;
 }
 
@@ -37,25 +42,34 @@ body {
 }
 
 .submit-button {
-    padding: 12px;
+    padding: 14px;
     border-radius: 8px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     border: none;
     background-color: #309689;
     color: white;
     cursor: pointer;
+    transition: 0.3s;
 }
+
+.submit-button:hover {
+    opacity: 0.9;
+}
+
+/* =========================
+   SOCIAL LOGIN
+========================= */
 
 .social-login-buttons {
     display: flex;
     gap: 24px;
     justify-content: center;
     align-items: center;
-
 }
+
 .social-login-buttons button {
-    padding: 8px 52px 8px 52px;
+    padding: 10px 52px;
     border-radius: 8px;
     border: solid 1px #ccc;
     background-color: white;
@@ -64,34 +78,42 @@ body {
     gap: 8px;
     align-items: center;
     font-size: 11px;
+    cursor: pointer;
 }
 
-.social-login-buttons img{
+.social-login-buttons img {
     width: 18px;
     height: 18px;
 }
 
-.sign-up-redirect{
+/* =========================
+   REDIRECT SECTION
+========================= */
+
+.sign-up-redirect {
     display: block;
-    gap: 8px;
     margin-top: 20px;
     font-size: 12px;
-    align-items: center;
 }
 
-.sign-up-redirect a{
+.sign-up-redirect section {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.sign-up-redirect a {
     color: #309689;
     font-weight: 600;
 }
-.sign-up-redirect p{
+
+.sign-up-redirect p {
     color: #969AB8;
 }
 
-.sign-up-redirect section{
-    display: flex;
-    gap: 8px;
-    
-}
+/* =========================
+   DIVIDER
+========================= */
 
 .divider {
     display: flex;
@@ -109,26 +131,179 @@ body {
     background-color: #ddd;
 }
 
+/* =========================
+   IMAGE SIDE
+========================= */
 
 .Left-Image {
     width: 50%;
-    height: 100vh;
+    min-height: 100vh;
     background-image: url(../../assets/Plant.png);
     background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
     position: relative;
 }
 
-.Left-Image h1{
+.Left-Image h1 {
     position: absolute;
     top: 15%;
     right: 28%;
-    font-size: xx-large;
+    font-size: 2.2rem;
     font-weight: 400;
     color: #3A424A;
 }
 
-.Left-Image h1 span{
+.Left-Image h1 span {
     color: #309689;
     font-weight: 600;
+}
+
+/* =========================
+   LARGE TABLETS
+========================= */
+
+@media (max-width: 1200px) {
+
+    .left-side-form {
+        padding: 60px 100px;
+    }
+
+    .Left-Image h1 {
+        right: 15%;
+    }
+
+}
+
+/* =========================
+   TABLETS
+========================= */
+
+@media (max-width: 992px) {
+
+    .left-side-form {
+        padding: 50px 60px;
+    }
+
+    .social-login-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .social-login-buttons button {
+        width: 100%;
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .Left-Image h1 {
+        right: 10%;
+        font-size: 2rem;
+    }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+    .signup-page {
+        flex-direction: column;
+    }
+
+    .Left-Image {
+        width: 100%;
+        height: 280px;
+        min-height: 280px;
+        order: 1;
+    }
+
+    .Left-Image h1 {
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        text-align: center;
+        font-size: 2rem;
+    }
+
+    .left-side-form {
+        width: 100%;
+        padding: 40px 24px;
+        order: 2;
+    }
+
+    .left-side-form h2 {
+        font-size: 2rem;
+    }
+
+    .left-side-form input {
+        font-size: 14px;
+        padding: 14px;
+    }
+
+    .submit-button {
+        width: 100%;
+    }
+
+    .social-login-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .social-login-buttons button {
+        width: 100%;
+        justify-content: center;
+        font-size: 12px;
+        padding: 12px;
+    }
+
+    .sign-up-redirect {
+        text-align: center;
+    }
+
+    .sign-up-redirect section {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width: 480px) {
+
+    .Left-Image {
+        height: 220px;
+        min-height: 220px;
+    }
+
+    .Left-Image h1 {
+        font-size: 1.6rem;
+        line-height: 1.3;
+    }
+
+    .left-side-form {
+        padding: 30px 18px;
+    }
+
+    .left-side-form h2 {
+        font-size: 1.7rem;
+        margin-bottom: 20px;
+    }
+
+    .divider {
+        font-size: 12px;
+    }
+
+    .social-login-buttons button {
+        font-size: 11px;
+        padding: 10px;
+    }
+
 }
