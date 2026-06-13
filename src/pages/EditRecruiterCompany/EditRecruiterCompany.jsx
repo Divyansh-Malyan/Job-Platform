@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./EditRecruiterCompany.css";
 import toast from "react-hot-toast";
 import useUserStore from "../../store/userStore";
-import {uploadRecruiterPhoto, uploadCompanyLogo} from "../../utils/uploadFiles";
-import {getRecruiterProfile, updateRecruiter} from "../../api/recruiterApi";
-import {updateCompany} from "../../api/companyApi";
+import { uploadRecruiterPhoto, uploadCompanyLogo } from "../../utils/uploadFiles";
+import { getRecruiterProfile, updateRecruiter } from "../../api/recruiterApi";
+import { updateCompany } from "../../api/companyApi";
 import { Riple } from "react-loading-indicators";
 
 const EditRecruiterCompany = () => {
@@ -228,9 +228,7 @@ const EditRecruiterCompany = () => {
             <div className="jobs-loader">
                 <Riple
                     color="#35b0a7"
-                    size="medium"
-                    text="Loading jobs..."
-                    textColor="#666"
+                    size="large"
                 />
             </div>
         );

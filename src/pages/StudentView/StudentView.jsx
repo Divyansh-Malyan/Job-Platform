@@ -1,12 +1,12 @@
 import React from "react";
 import "./StudentView.css";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import "./StudentView.css";
 import ProfilePic from "../../assets/profile.jpg";
-import {useParams} from "react-router-dom";
-import {getStudentById} from "../../api/studentApi";
+import { useParams } from "react-router-dom";
+import { getStudentById } from "../../api/studentApi";
 import { useLocation } from "react-router-dom";
-import {updateApplicationStatus} from "../../api/applicationApi";
+import { updateApplicationStatus } from "../../api/applicationApi";
 import { Riple } from "react-loading-indicators";
 
 const StudentView = () => {
@@ -67,9 +67,7 @@ const StudentView = () => {
             <div className="jobs-loader">
                 <Riple
                     color="#35b0a7"
-                    size="medium"
-                    text="Loading jobs..."
-                    textColor="#666"
+                    size="large"
                 />
             </div>
         );
