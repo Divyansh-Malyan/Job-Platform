@@ -156,8 +156,29 @@ const logout = async () => {
   };
 };
 
+const loginWithGoogle = async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: window.location.origin,
+    },
+  });
+
+  if (error) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+
+  return {
+    success: true,
+  };
+};
+
 export {
   login,
   signup,
   logout,
+  loginWithGoogle
 };

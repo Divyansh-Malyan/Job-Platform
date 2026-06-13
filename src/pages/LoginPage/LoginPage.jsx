@@ -3,9 +3,10 @@ import './LoginPage.css';
 import google from '../../assets/google.svg';
 import github from '../../assets/github.svg';
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { login } from '../../utils/Auth_Client'
+import { login, loginWithGoogle } from '../../utils/Auth_Client'
 import toast from 'react-hot-toast';
 import useUserStore from "../../store/userStore";
+
 
 
 const LoginPage = () => {
@@ -90,8 +91,11 @@ const LoginPage = () => {
                 </div>
 
                 <div className='social-login-buttons'>
-                    <button type='button'><img src={google} alt="Google Icon" /> Google</button>
-                    <button type='button'><img src={github} alt="Github Icon" /> Github</button>
+                    <button type="button" onClick={loginWithGoogle}>
+                        <img src={google} alt="Google Icon" />
+                        Google
+                    </button>
+                    {/* <button type='button'><img src={github} alt="Github Icon" /> Github</button> */}
                 </div>
 
                 <section className='sign-up-redirect'>
