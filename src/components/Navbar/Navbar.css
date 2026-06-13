@@ -376,3 +376,14 @@
   }
 
 }
+
+.logo {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.logo h2 {
+  margin: 0;
+  color: white;
+  text-decoration: none;
+}
