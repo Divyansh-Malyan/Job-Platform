@@ -10,7 +10,6 @@ const useUserStore = create((set) => ({
   initializeUser: async () => {
     set({ loading: true });
 
-    ```
 const { data } = await supabase.auth.getUser();
 const user = data?.user;
 
@@ -117,7 +116,6 @@ set({
   profile: null,
   loading: false,
 });
-```
 
   },
 
@@ -127,7 +125,7 @@ set({
     const { data } = await supabase.auth.getUser();
     const user = data?.user;
 
-    ```
+    
 if (!user) return;
 
 const studentData = {
@@ -170,7 +168,6 @@ if (!error) {
     },
   });
 }
-```
 
   },
 
