@@ -21,13 +21,10 @@ const ForgotPassword = () => {
         setLoading(true);
 
         const { error } =
-            await supabase.auth.resetPasswordForEmail(
-                email,
-                {
-                    redirectTo:
-                        "http://localhost:5173/reset-password"
-                }
-            );
+            await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: "https://job-platform-plum.vercel.app/reset-password",
+            });
+
 
         setLoading(false);
 
